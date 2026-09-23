@@ -9374,6 +9374,15 @@ Source: ${impact.sourceUrl}` : ""}`;
     }
   }
   __name(setTeamOptCount, "setTeamOptCount");
+  function reconcileTeamOptScan(counts, expectedPage, currentPage, spid, live) {
+    if (currentPage !== expectedPage) return false;
+    if (live) {
+      counts.set(live.leagueId, live.count);
+      setTeamOptCount(live.leagueId, live.count, String(spid), live.swapText);
+    }
+    return true;
+  }
+  __name(reconcileTeamOptScan, "reconcileTeamOptScan");
   function renderTeamMenuOptIndicators(counts, swaps) {
     const buttons = Array.from(document.querySelectorAll("tr button"));
     for (const button of buttons) {
@@ -11977,8 +11986,20 @@ ${entry.breakdown}`;
         };
         lastOptCounts = restoreTeamOptDisplay(String(optSpid), Object.keys(scanOptions.menuInfo));
         const reRender = /* @__PURE__ */ __name((counts) => {
+          if (!reconcileTeamOptScan(
+            counts,
+            signature,
+            pageSignature(),
+            optSpid,
+            renderedMenuLeagueId ? {
+              leagueId: renderedMenuLeagueId,
+              count: countSwaps(result.changes),
+              swapText: describeSwaps(result.changes, rows)
+            } : void 0
+          )) return false;
           lastOptCounts = counts;
           renderTeamMenuOptIndicators(lastOptCounts, currentTeamOptSwaps());
+          return true;
         }, "reRender");
         const handleTeamActionError = /* @__PURE__ */ __name((action, error) => {
           if (recoverInvalidatedContext(error)) {
@@ -11993,8 +12014,7 @@ ${entry.breakdown}`;
             button.disabled = true;
             button.textContent = "Refreshing\u2026";
             scanTeamOptimizations(scanOptions, true).then((counts) => {
-              reRender(counts);
-              showToast("Team optimization indicators refreshed.", "info");
+              if (reRender(counts)) showToast("Team optimization indicators refreshed.", "info");
             }).catch((error) => handleTeamActionError("Refresh", error)).finally(() => {
               button.disabled = false;
               button.textContent = orig;
@@ -12031,18 +12051,7 @@ ${entry.breakdown}`;
           // press); a quiet swap re-optimize reuses the cache and just overrides
           // the selected team's count below
           force && !quiet
-        ).then((counts) => {
-          if (pageSignature() !== signature) {
-            return;
-          }
-          if (renderedMenuLeagueId) {
-            const liveCount = countSwaps(result.changes);
-            setTeamOptCount(renderedMenuLeagueId, liveCount, String(optSpid), describeSwaps(result.changes, rows));
-            counts.set(renderedMenuLeagueId, liveCount);
-          }
-          lastOptCounts = counts;
-          renderTeamMenuOptIndicators(lastOptCounts, currentTeamOptSwaps());
-        }).catch((error) => {
+        ).then(reRender).catch((error) => {
           if (!recoverInvalidatedContext(error)) {
             console.warn("[NFBC] team-menu optimization scan failed", error);
           }
