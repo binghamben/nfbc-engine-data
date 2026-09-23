@@ -1,5 +1,6 @@
 {
   "files": {
+    ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
     "bookmarklet.js": "002faf7c4e0f5431c60988c55ce140bffa3ab469825d8ae6b5b1cf60669ad3b0",
@@ -19,5 +20,5 @@
     "working_tree_changes": true,
     "sha256": "002faf7c4e0f5431c60988c55ce140bffa3ab469825d8ae6b5b1cf60669ad3b0"
   },
-  "published_at": "2026-09-23T00:39:00.619202+00:00"
+  "published_at": "2026-09-23T00:40:41.883982+00:00"
 }
