@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 7975c1f11249937756f0d07d80caa5814023513c
+// NFBC_SOURCE_COMMIT bc03c1d628cac52bd998245e206d628c4e29e772
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -8446,7 +8446,7 @@ Source: ${impact.sourceUrl}` : ""}`;
     const leagueRank = bundle?.leagueRank?.rank;
     const leagueCount = bundle?.leagueRank?.teamCount;
     const hasLeagueRank = Number.isFinite(leagueRank) && Number.isFinite(leagueCount) && (leagueRank ?? 0) > 0 && (leagueCount ?? 0) > 0;
-    const tracksOverall = hasLeagueRank && leagueRank <= 2;
+    const tracksOverall = hasLeagueRank && leagueRank === 1;
     if (tracksOverall) {
       if (bundle?.overall) {
         return {
@@ -8455,14 +8455,14 @@ Source: ${impact.sourceUrl}` : ""}`;
           comparisonLabel: bundle.league ? "League context comparison" : void 0,
           comparisonReason: bundle.league ? "Shown separately from the primary overall-context recommendation." : void 0,
           source: "overall",
-          label: "Overall context \xB7 league top 2" + mode(bundle.overall),
-          reason: `League rank ${leagueRank} of ${leagueCount} is in the top two.`
+          label: "Overall context \xB7 league leader" + mode(bundle.overall),
+          reason: `League rank ${leagueRank} of ${leagueCount} leads the league.`
         };
       }
       return {
         source: "raw",
         label: "Raw SGP \xB7 overall context unavailable",
-        reason: `League rank ${leagueRank} of ${leagueCount} is in the top two, but overall category context is unavailable.`
+        reason: `League rank ${leagueRank} of ${leagueCount} leads the league, but overall category context is unavailable.`
       };
     }
     if (bundle?.league) {
@@ -8470,13 +8470,13 @@ Source: ${impact.sourceUrl}` : ""}`;
         contexts: [bundle.league],
         source: "league",
         label: "League context" + mode(bundle.league),
-        reason: hasLeagueRank ? `League rank ${leagueRank} of ${leagueCount} is outside the top two.` : "League rank is unavailable, so the optimizer defaults to league context."
+        reason: hasLeagueRank ? `League rank ${leagueRank} of ${leagueCount} is not the league lead.` : "League rank is unavailable, so the optimizer defaults to league context."
       };
     }
     return {
       source: "raw",
       label: "Raw SGP \xB7 league context unavailable",
-      reason: hasLeagueRank ? `League rank ${leagueRank} of ${leagueCount} is outside the top two, but league category context is unavailable.` : "League rank and league category context are unavailable."
+      reason: hasLeagueRank ? `League rank ${leagueRank} of ${leagueCount} is not the league lead, but league category context is unavailable.` : "League rank and league category context are unavailable."
     };
   }
   __name(selectOptimizationContext, "selectOptimizationContext");
