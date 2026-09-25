@@ -3,22 +3,22 @@
     ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
-    "bookmarklet.js": "fceb427bdb430685e4a940f8f2150e63ed17b18792a5a99f27b333d09451028e",
+    "bookmarklet.js": "2b755dc460cb79651c93c2273e08f6b170e4112d04106c71cd8437fc07af7e82",
     "draft2027.json": "785a1ed8e6df49fef45d5987b7a9692348fd977465e7c90b13d2c0b2505dd733",
-    "faab.json": "51342fd7a4bac97f104b4b9922fc96eca71f852fb114a8b1cacf73ca5d2207eb",
-    "l30.json": "fd3bd1081b4e66ddb0eac5221b64959c9b16c8e6b216b88924b1a5d5282d2e23",
-    "projections.json": "43e1a5880b31f9e0714fe09a463912b84be28fe390f41e27cdaf29a23ab06b45",
-    "projections_next.json": "ab83dcad58b4388cc88870c603e707c2f0c2d41fce67d2c23c7a5a80e5dcbdfa",
+    "faab.json": "0c97c22b4dfee7effe254622246c56247f2c74d3fe311730730bbf653e4817f6",
+    "l30.json": "218dc9a9fbb3d220c709af2a2c0cdcde7e41314393e495348e2f8e634dfb17ff",
+    "projections.json": "03d28ee17389a04c72c6fce9914c021edad623635484efa8e0e539076a146e82",
+    "projections_next.json": "03cdabae119c85ae8661e01de6d76e788a5322587a3aff16acd5d49ab3c46e79",
     "prospect_movement.json": "5601bf05c5a94585ff9200f350b249f1c8f518cba201970efe0e27c167d119bb",
     "prospects.json": "5fda97b0d6454da67c0e2e5c2d3cbb6a8853ca01b2b5356bd5f361298cf453de",
     "README.md": "2c3a2e79a81ab5ad3f62fc1984ab66273a3c406ebf4ab746d59adb4733607ed9",
-    "skills.json": "15b4ccaad46dfb41d531b0ee2edaeca7a42be9785c37ac55d3ce5961142a07b7"
+    "skills.json": "00f134b45b6c15c960136c862c93ea9f0e80e778876125581dec7ed69dc2ffbe"
   },
-  "generated_at": "2026-09-25 15:01:41.153272+00:00",
+  "generated_at": "2026-09-25 17:02:51.734601+00:00",
   "client": {
-    "source_head": "78edd17a5a4ca7a16c50b83cfc2e03eb2f528fd8",
+    "source_head": "bc90bf1f3bb5ca9259ea79a520dc5fe05a47ac25",
     "working_tree_changes": false,
-    "sha256": "fceb427bdb430685e4a940f8f2150e63ed17b18792a5a99f27b333d09451028e"
+    "sha256": "2b755dc460cb79651c93c2273e08f6b170e4112d04106c71cd8437fc07af7e82"
   },
-  "published_at": "2026-09-25T15:07:41.579914+00:00"
+  "published_at": "2026-09-25T17:16:07.233970+00:00"
 }

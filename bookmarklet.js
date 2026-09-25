@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 78edd17a5a4ca7a16c50b83cfc2e03eb2f528fd8
+// NFBC_SOURCE_COMMIT 7975c1f11249937756f0d07d80caa5814023513c
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -6374,7 +6374,9 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
     const scored = [];
     for (const category of categories) {
       const delta = (ctx[category] ?? 0) - (raw[category] ?? 0);
-      const extra = delta * ((multipliers[category] ?? 1) - 1);
+      const weight = multipliers[category] ?? 1;
+      if (!(delta > 0 && weight > 1)) continue;
+      const extra = delta * (weight - 1);
       if (extra > 1e-6) {
         scored.push({ category, extra });
       }
