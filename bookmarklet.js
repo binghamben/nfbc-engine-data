@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT eb5976693cd01b742626643913992c874e4a22ff
+// NFBC_SOURCE_COMMIT 78edd17a5a4ca7a16c50b83cfc2e03eb2f528fd8
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -482,13 +482,13 @@
     }
     const byKey = /* @__PURE__ */ new Map();
     for (const game of dated) {
-      const key = game.date;
+      const key = game.gamePk != null ? `pk:${game.gamePk}` : game.date;
       const existing = byKey.get(key);
       if (!existing || !existing.starters.has(normalizedName) && game.starters.has(normalizedName)) {
         byKey.set(key, game);
       }
     }
-    return Array.from(byKey.values()).sort((left, right) => (right.date ?? "").localeCompare(left.date ?? "")).slice(0, MAX_AVAILABLE_GAMES);
+    return Array.from(byKey.values()).sort((left, right) => (right.date ?? "").localeCompare(left.date ?? "") || (right.gamePk ?? 0) - (left.gamePk ?? 0)).slice(0, MAX_AVAILABLE_GAMES);
   }
   __name(combinePlayerGameHistory, "combinePlayerGameHistory");
   function evaluateHitterRisk(normalizedName, batterHand, games) {
@@ -777,14 +777,14 @@
         if (!gameDate || !awayTeam || !homeTeam) continue;
         if (normalizedTeams.has(awayTeam)) {
           if (homePitcher?.id && homePitcher.fullName) {
-            candidates.push({ team: awayTeam, date: gameDate, pitcherId: homePitcher.id, pitcherName: homePitcher.fullName });
+            candidates.push({ team: awayTeam, date: gameDate, pitcherId: homePitcher.id, pitcherName: homePitcher.fullName, gamePk: game.gamePk });
           } else {
             gaps.push({ team: awayTeam, date: gameDate, gamePk: game.gamePk, opponentSide: "home" });
           }
         }
         if (normalizedTeams.has(homeTeam)) {
           if (awayPitcher?.id && awayPitcher.fullName) {
-            candidates.push({ team: homeTeam, date: gameDate, pitcherId: awayPitcher.id, pitcherName: awayPitcher.fullName });
+            candidates.push({ team: homeTeam, date: gameDate, pitcherId: awayPitcher.id, pitcherName: awayPitcher.fullName, gamePk: game.gamePk });
           } else {
             gaps.push({ team: homeTeam, date: gameDate, gamePk: game.gamePk, opponentSide: "away" });
           }
@@ -893,6 +893,11 @@
     }
   }
   __name(fetchProbablesMirror, "fetchProbablesMirror");
+  async function fetchEngineRotationProbables(targetTeams) {
+    const full = buildFanGraphsProbablesMap(await fetchProbablesMirror(), targetTeams);
+    return new Map(Array.from(full, ([team, byDate]) => [team, new Map(Array.from(byDate, ([date, pitchers]) => [date, pitchers.map((pitcher) => ({ ...pitcher, source: "engine", projected: true }))]))]));
+  }
+  __name(fetchEngineRotationProbables, "fetchEngineRotationProbables");
   var ROTOWIRE_PROBABLES_URL = "https://www.rotowire.com/baseball/projected-starters.php";
   var MONTH_NUMBER = {
     January: 1,
@@ -930,7 +935,8 @@
     const starterPattern = /<a class="starters-matrix__starter([^"]*)" href="\/baseball\/player\/([^"\/]+)-\d+"[^>]*>[^<]+<\/a>\s*<span class="sm-text">([LR])<\/span>[\s\S]*?<div class="sm-text"><span class="np">([A-Z][a-z]+)<\/span>[^<]*?(?:@|vs\.?)\s*([A-Z]{2,3})<\/div>/g;
     for (const row of rows) {
       const body = row[2] ?? "";
-      for (const match of body.matchAll(starterPattern)) {
+      const cells = body.includes("starters-matrix__item") ? body.split(/(?=<div class="starters-matrix__item)/) : [body];
+      for (const match of cells.flatMap((cell) => Array.from(cell.matchAll(starterPattern)))) {
         const opponent = normalizeTeam(match[5]);
         const date = isoFromRotoWireDay(html, match[4] ?? "", year);
         const hand = asPitcherHand(match[3]);
@@ -1153,8 +1159,9 @@
     decode: /* @__PURE__ */ __name((raw) => new Map((Array.isArray(raw) ? raw : []).map(([team, byDate]) => [team, new Map(byDate)])), "decode")
   };
   var opposingProbablesCached = persistentCacheByKey(
+    // v4: one fallback starter per unannounced game (v3 entries may hold two).
     30 * MINUTES,
-    "probables-v3",
+    "probables-v4",
     (cacheKey) => loadOpposingProbablesByTeamDate(cacheKey ? cacheKey.split(",") : []),
     probablesCodec
   );
@@ -1165,6 +1172,31 @@
     return opposingProbablesCached(normalized.join(",")).then((map) => reconcileProbableMap(map));
   }
   __name(fetchOpposingProbablesByTeamDate, "fetchOpposingProbablesByTeamDate");
+  function sortBySchedule(pitchers, gameOrder) {
+    const rank = /* @__PURE__ */ __name((p) => p.gamePk != null ? gameOrder.get(p.gamePk) ?? Number.MAX_SAFE_INTEGER : Number.MAX_SAFE_INTEGER, "rank");
+    return pitchers.map((pitcher, index) => ({ pitcher, index })).sort((a, b) => rank(a.pitcher) - rank(b.pitcher) || a.index - b.index).map(({ pitcher }) => pitcher);
+  }
+  __name(sortBySchedule, "sortBySchedule");
+  function pickGapFallbacks(gaps, posted, mirror, rotoWire, engine = /* @__PURE__ */ new Map(), announced = []) {
+    const picks = /* @__PURE__ */ new Map();
+    for (const gap of gaps) {
+      const rw = rotoWire.get(gap.team)?.get(gap.date) ?? [];
+      const ranked = [
+        ...rw.filter((p) => !p.projected),
+        ...mirror.get(gap.team)?.get(gap.date) ?? [],
+        ...engine.get(gap.team)?.get(gap.date) ?? [],
+        ...rw.filter((p) => p.projected)
+      ];
+      const taken = [
+        ...posted.get(gap.team)?.get(gap.date) ?? [],
+        ...Array.from(picks).filter(([other]) => other.team === gap.team && other.date === gap.date).map(([, p]) => p)
+      ];
+      const pick = ranked.find((p) => !taken.some((item) => normalizeName(item.name) === normalizeName(p.name)) && !probableDateConflicts({ name: p.name, date: gap.date, priority: 1 }, announced));
+      if (pick) picks.set(gap, pick);
+    }
+    return picks;
+  }
+  __name(pickGapFallbacks, "pickGapFallbacks");
   function reconcileProbableMap(map, extra = []) {
     const claim = /* @__PURE__ */ __name((p, date) => ({ name: p.name, date, priority: p.source === "mlb" ? 3 : 1 }), "claim");
     const evidence = [...extra, ...Array.from(map.values()).flatMap((byDate) => Array.from(byDate).flatMap(([date, players]) => players.map((p) => claim(p, date))))];
@@ -1179,12 +1211,13 @@
     const result = /* @__PURE__ */ new Map();
     const startDate = localTodayIso();
     const endDate = isoDate(new Date(Date.now() + 10 * 24 * 60 * 60 * 1e3));
-    const [schedule, fangraphsFallback, rotoWireFallback] = await Promise.all([
+    const [schedule, fangraphsFallback, rotoWireFallback, engineFallback] = await Promise.all([
       fetchJson(
         `https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=${startDate}&endDate=${endDate}&hydrate=team,probablePitcher`
       ),
       fetchFanGraphsProbables(normalizedTeams).catch(() => /* @__PURE__ */ new Map()),
-      fetchRotoWireProbables(normalizedTeams).catch(() => /* @__PURE__ */ new Map())
+      fetchRotoWireProbables(normalizedTeams).catch(() => /* @__PURE__ */ new Map()),
+      fetchEngineRotationProbables(normalizedTeams).catch(() => /* @__PURE__ */ new Map())
     ]);
     const { candidates, gaps } = collectOpposingProbableScheduleEntries(schedule, normalizedTeams);
     const uniquePitcherIds = Array.from(new Set(candidates.map((candidate) => candidate.pitcherId)));
@@ -1202,7 +1235,7 @@
       const byDate = result.get(candidate.team) ?? /* @__PURE__ */ new Map();
       const existing = byDate.get(candidate.date) ?? [];
       if (!existing.some((item) => item.name === candidate.pitcherName && item.hand === hand)) {
-        existing.push({ name: candidate.pitcherName, hand, source: "mlb" });
+        existing.push({ name: candidate.pitcherName, hand, source: "mlb", gamePk: candidate.gamePk });
       }
       byDate.set(candidate.date, existing);
       result.set(candidate.team, byDate);
@@ -1218,29 +1251,37 @@
       byDate.set(date, existing);
       result.set(team, byDate);
     }, "fill");
-    for (const gap of gaps) {
-      const fgProbables = fangraphsFallback.get(gap.team)?.get(gap.date);
-      if (fgProbables && fgProbables.length > 0) {
-        fill(gap.team, gap.date, fgProbables);
+    const postedEvidence = [];
+    for (const day of schedule.dates ?? []) for (const game of day.games ?? []) {
+      for (const side of ["away", "home"]) {
+        const name = game.teams?.[side]?.probablePitcher?.fullName;
+        if (name && game.officialDate) postedEvidence.push({ name, date: game.officialDate.slice(0, 10), priority: 3 });
       }
-      const rwProbables = rotoWireFallback.get(gap.team)?.get(gap.date);
-      if (rwProbables && rwProbables.length > 0) {
-        fill(gap.team, gap.date, rwProbables);
-      }
+    }
+    const gapFills = pickGapFallbacks(gaps, result, fangraphsFallback, rotoWireFallback, engineFallback, postedEvidence);
+    for (const [gap, pick] of gapFills) {
+      const tagged = { ...pick, gamePk: gap.gamePk };
+      gapFills.set(gap, tagged);
+      fill(gap.team, gap.date, [tagged]);
     }
     const windowEnd = isoDate(new Date(Date.now() + 3 * 24 * 60 * 60 * 1e3));
     const liveGaps = gaps.filter((gap) => gap.gamePk != null && gap.date <= windowEnd).slice(0, 16);
     await Promise.all(liveGaps.map(async (gap) => {
       const starter = await fetchLiveStarter(gap.gamePk, gap.opponentSide);
       if (starter) {
-        fill(gap.team, gap.date, [{ name: starter.name, hand: starter.hand, source: "mlb" }]);
+        const guess = gapFills.get(gap);
+        const byDate = result.get(gap.team);
+        if (guess && byDate) byDate.set(gap.date, (byDate.get(gap.date) ?? []).filter((item) => item !== guess));
+        fill(gap.team, gap.date, [{ name: starter.name, hand: starter.hand, source: "mlb", gamePk: gap.gamePk }]);
       }
     }));
-    const postedEvidence = [];
+    const gameOrder = /* @__PURE__ */ new Map();
     for (const day of schedule.dates ?? []) for (const game of day.games ?? []) {
-      for (const side of ["away", "home"]) {
-        const name = game.teams?.[side]?.probablePitcher?.fullName;
-        if (name && game.officialDate) postedEvidence.push({ name, date: game.officialDate.slice(0, 10), priority: 3 });
+      if (game.gamePk != null) gameOrder.set(game.gamePk, gameOrder.size);
+    }
+    for (const byDate of result.values()) {
+      for (const [date, pitchers] of byDate) {
+        byDate.set(date, sortBySchedule(pitchers, gameOrder));
       }
     }
     return reconcileProbableMap(result, postedEvidence);
@@ -1305,13 +1346,14 @@
         }
       }
     }
+    const gameOrder = new Map(jobs.map((job, index) => [job.gamePk, index]));
     await Promise.all(jobs.slice(0, 40).map(async (job) => {
       const starter = await actualOpposingStarter(job.gamePk, job.team);
       if (!starter) {
         return;
       }
       const byDate = result.get(job.team) ?? /* @__PURE__ */ new Map();
-      byDate.set(job.date, [starter]);
+      byDate.set(job.date, sortBySchedule([...byDate.get(job.date) ?? [], { ...starter, gamePk: job.gamePk }], gameOrder));
       result.set(job.team, byDate);
     }));
     return result;
@@ -1569,6 +1611,7 @@
       starters,
       appearances,
       opponentStarterHand,
+      gamePk,
       ...date ? { date } : {}
     };
   }
@@ -1582,7 +1625,8 @@
       s: Array.from(game.starters),
       a: game.appearances ? Array.from(game.appearances) : void 0,
       h: game.opponentStarterHand,
-      d: game.date
+      d: game.date,
+      p: game.gamePk
     })), "encode"),
     decode: /* @__PURE__ */ __name((raw) => (Array.isArray(raw) ? raw : []).map((game) => {
       const g = game;
@@ -1590,7 +1634,8 @@
         starters: new Set(g.s ?? []),
         ...g.a ? { appearances: new Set(g.a) } : {},
         ...g.h ? { opponentStarterHand: g.h } : {},
-        ...g.d ? { date: g.d } : {}
+        ...g.d ? { date: g.d } : {},
+        ...g.p != null ? { gamePk: g.p } : {}
       };
     }), "decode")
   };
@@ -2614,7 +2659,7 @@
       const hand = hands[0] ?? "R";
       return {
         label: `${hand}HP`,
-        detail: probables.length === 1 ? `${probables[0]?.name} (${hand}) ${probables[0]?.projected ? "projected by RotoWire" : "probable starter"}` : `${probables.map((probable) => `${probable.name} (${probable.hand})${probable.projected ? " projected" : ""}`).join(", ")}`,
+        detail: probables.length === 1 ? `${probables[0]?.name} (${hand}) ${probables[0]?.projected ? probables[0]?.source === "engine" ? "projected by the engine's rotation" : "projected by RotoWire" : "probable starter"}` : `${probables.map((probable) => `${probable.name} (${probable.hand})${probable.projected ? " projected" : ""}`).join(", ")}`,
         tone: hand === "L" ? "left" : "right",
         source,
         gameCount: probables.length,
@@ -2661,6 +2706,7 @@
       return hasGameToday ? { label: "No LU", detail: "Team lineup has not been posted yet", tone: "pending" } : { label: "Off", detail: "No MLB game scheduled today", tone: "off" };
     }
     const multipleGames = snapshots.length > 1;
+    const gameNumber = /* @__PURE__ */ __name((snapshot) => snapshots.indexOf(snapshot) + 1, "gameNumber");
     for (const snapshot of snapshots) {
       const order = snapshot.starters.get(row.normalizedName);
       if (!order) {
@@ -2668,16 +2714,18 @@
       }
       return {
         label: String(order),
-        detail: multipleGames ? `Starting in game ${snapshot.gameIndex}, batting ${order}` : `Starting in today's lineup, batting ${order}`,
-        tone: "in"
+        detail: multipleGames ? `Starting in game ${gameNumber(snapshot)}, batting ${order}` : `Starting in today's lineup, batting ${order}`,
+        tone: "in",
+        gamePk: snapshot.gamePk
       };
     }
     const postedGame = snapshots.find((snapshot) => snapshot.hasPostedLineup);
     if (postedGame) {
       return {
         label: "X",
-        detail: multipleGames ? `Not in the posted starting lineup for game ${postedGame.gameIndex}` : "Not in the posted starting lineup",
-        tone: "out"
+        detail: multipleGames ? `Not in the posted starting lineup for game ${gameNumber(postedGame)}` : "Not in the posted starting lineup",
+        tone: "out",
+        gamePk: postedGame.gamePk
       };
     }
     return {
@@ -2689,7 +2737,7 @@
   __name(resolveBubble, "resolveBubble");
   var snapshotCodec = {
     encode: /* @__PURE__ */ __name((value) => ({
-      s: Array.from(value.snapshots, ([team, list]) => [team, list.map((x) => [x.gameIndex, x.hasPostedLineup, Array.from(x.starters)])]),
+      s: Array.from(value.snapshots, ([team, list]) => [team, list.map((x) => [x.gameIndex, x.hasPostedLineup, Array.from(x.starters), x.gamePk])]),
       w: Array.from(value.withGameToday)
     }), "encode"),
     decode: /* @__PURE__ */ __name((raw) => {
@@ -2697,7 +2745,7 @@
       return {
         snapshots: new Map((r.s ?? []).map(([team, list]) => [
           team,
-          list.map(([gameIndex, hasPostedLineup, starters]) => ({ gameIndex, hasPostedLineup, starters: new Map(starters) }))
+          list.map(([gameIndex, hasPostedLineup, starters, gamePk]) => ({ gameIndex, hasPostedLineup, starters: new Map(starters), gamePk }))
         ])),
         withGameToday: new Set(r.w ?? [])
       };
@@ -2754,7 +2802,7 @@
         Array.from(relevantGames.values()).map(async (game, index) => {
           try {
             const feed = await fetchJson2(`https://statsapi.mlb.com${game.link}`);
-            return { feed, gameIndex: index + 1 };
+            return { feed, gameIndex: index + 1, gamePk: game.gamePk };
           } catch {
             return void 0;
           }
@@ -2763,9 +2811,9 @@
       const snapshotsByTeam = /* @__PURE__ */ new Map();
       feeds.forEach((entry) => {
         if (!entry) return;
-        const { feed, gameIndex } = entry;
-        appendSnapshot(snapshotsByTeam, feed.gameData?.teams?.away?.abbreviation, buildSnapshot(feed.liveData?.boxscore?.teams?.away, gameIndex, normalizeName));
-        appendSnapshot(snapshotsByTeam, feed.gameData?.teams?.home?.abbreviation, buildSnapshot(feed.liveData?.boxscore?.teams?.home, gameIndex, normalizeName));
+        const { feed, gameIndex, gamePk } = entry;
+        appendSnapshot(snapshotsByTeam, feed.gameData?.teams?.away?.abbreviation, { ...buildSnapshot(feed.liveData?.boxscore?.teams?.away, gameIndex, normalizeName), gamePk });
+        appendSnapshot(snapshotsByTeam, feed.gameData?.teams?.home?.abbreviation, { ...buildSnapshot(feed.liveData?.boxscore?.teams?.home, gameIndex, normalizeName), gamePk });
       });
       return { snapshots: snapshotsByTeam, withGameToday: teamsWithGameToday };
     } catch (error) {
@@ -2861,6 +2909,54 @@
     }
   }
   __name(fetchScheduleHandIndicators, "fetchScheduleHandIndicators");
+  function formatCentralTime(iso) {
+    return new Date(iso).toLocaleTimeString("en-US", { timeZone: "America/Chicago", hour: "numeric", minute: "2-digit" }).replace(/\s?[AP]M$/i, "");
+  }
+  __name(formatCentralTime, "formatCentralTime");
+  function centralTimesFromSchedule(schedule, teams) {
+    const out = /* @__PURE__ */ new Map();
+    const games = (schedule.dates ?? []).flatMap((day) => (day.games ?? []).map((game) => ({ day: day.date, game })));
+    games.sort((a, b) => (a.game.gameDate ?? "").localeCompare(b.game.gameDate ?? "") || (a.game.gameNumber ?? 1) - (b.game.gameNumber ?? 1));
+    for (const { day, game } of games) {
+      const date = (game.officialDate ?? day)?.slice(0, 10);
+      if (!date || !game.gameDate || /postponed|cancel/i.test(game.status?.detailedState ?? "")) continue;
+      const time = game.status?.startTimeTBD ? "TBD" : formatCentralTime(game.gameDate);
+      for (const side of ["away", "home"]) {
+        const team = normalizeTeam(game.teams?.[side]?.team?.abbreviation);
+        if (!team || !teams.has(team)) continue;
+        const byDate = out.get(team) ?? /* @__PURE__ */ new Map();
+        byDate.set(date, [...byDate.get(date) ?? [], time]);
+        out.set(team, byDate);
+      }
+    }
+    return out;
+  }
+  __name(centralTimesFromSchedule, "centralTimesFromSchedule");
+  var centralTimesCodec = {
+    encode: /* @__PURE__ */ __name((value) => Array.from(value, ([team, byDate]) => [team, Array.from(byDate)]), "encode"),
+    decode: /* @__PURE__ */ __name((raw) => new Map((Array.isArray(raw) ? raw : []).map(([team, byDate]) => [team, new Map(byDate)])), "decode")
+  };
+  var centralTimesCached = persistentCacheByKey(10 * MINUTES, "gametimes-ct", async (key) => {
+    const [start = "", end = "", teamList = ""] = key.split("|");
+    const schedule = await fetchJson2(
+      `https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=${start}&endDate=${end}&hydrate=team`
+    );
+    return centralTimesFromSchedule(schedule, new Set(teamList.split(",").filter(Boolean)));
+  }, centralTimesCodec);
+  async function fetchScheduleCentralTimes(rows, dateLabels) {
+    const dates = dateLabels.map((label) => ({ label, iso: dateLabelToIso(label) })).filter((item) => Boolean(item.iso));
+    const teams = Array.from(new Set(rows.map((row) => row.normalizedTeam).filter((team) => Boolean(team)))).sort();
+    if (dates.length === 0 || teams.length === 0) return /* @__PURE__ */ new Map();
+    const isos = dates.map((date) => date.iso).sort();
+    try {
+      const byIso = await centralTimesCached(`${isos[0]}|${isos[isos.length - 1]}|${teams.join(",")}`);
+      return new Map(Array.from(byIso, ([team, byDate]) => [team, new Map(dates.filter((date) => byDate.has(date.iso)).map((date) => [date.label, byDate.get(date.iso)]))]));
+    } catch (error) {
+      console.warn("[NFBC] MLB game times unavailable; keeping NFBC's schedule times", error);
+      return /* @__PURE__ */ new Map();
+    }
+  }
+  __name(fetchScheduleCentralTimes, "fetchScheduleCentralTimes");
   async function fetchOwnStartConfirmations(rows, dateLabels) {
     const pitcherRows = rows.filter((row) => isPitcherRow(row) && row.normalizedName && row.normalizedTeam);
     const activeDates = dateLabels.map((label) => ({ label, iso: dateLabelToIso(label) })).filter((item) => Boolean(item.iso));
@@ -6973,7 +7069,7 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
     return { opponentText, gameTimeText: existingGameTime };
   }
   __name(scheduleTextParts, "scheduleTextParts");
-  function annotateSetLineupScheduleCells(card, indicators, dateLabels, showHandBadges, isPitcher, startConfirmations) {
+  function annotateSetLineupScheduleCells(card, indicators, dateLabels, showHandBadges, isPitcher, startConfirmations, centralTimes) {
     if (dateLabels.length === 0) {
       return;
     }
@@ -6994,7 +7090,10 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
       }
       const nativeStart = nativeStartDates.has(dateLabel);
       const fgHand = isPitcher ? startConfirmations?.get(dateLabel) : void 0;
-      const { opponentText, gameTimeText } = scheduleTextParts(cell);
+      const { opponentText, gameTimeText: nativeTimeText } = scheduleTextParts(cell);
+      const mlbTimes = centralTimes?.get(dateLabel);
+      const gameLabel = /* @__PURE__ */ __name((value, index2) => !value || value === "TBD" ? `G${index2 + 1}` : value, "gameLabel");
+      const gameTimeText = mlbTimes && mlbTimes.length > 0 ? mlbTimes.map((value, index2) => mlbTimes.length > 1 ? gameLabel(value, index2) : value).join(" \xB7 ") : nativeTimeText;
       const hasGame = Boolean(opponentText && opponentText !== "-");
       const indicator = showHandBadges && hasGame ? indicators?.get(dateLabel) ?? {
         label: "?",
@@ -7062,7 +7161,7 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
       if (doubleheader && indicator) {
         const games = document.createElement("div");
         games.dataset.nfbcExt = "schedule-dh-games";
-        const times = gameTimeText.split(/\s+·\s+/).filter(Boolean).sort((left, right) => {
+        const times = mlbTimes && mlbTimes.length > 0 ? mlbTimes.map(gameLabel) : nativeTimeText.split(/\s+·\s+/).filter(Boolean).sort((left, right) => {
           const clock = /* @__PURE__ */ __name((value) => {
             const match = value.match(/(\d{1,2}):(\d{2})/);
             if (!match) return Number.MAX_SAFE_INTEGER;
@@ -7102,7 +7201,7 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
       if (startDetail) titleParts.push(startDetail);
       if (indicator) titleParts.push(indicator.detail);
       if (opponentText) titleParts.push(opponentText);
-      if (gameTimeText) titleParts.push(gameTimeText);
+      if (gameTimeText) titleParts.push(mlbTimes && mlbTimes.length > 0 ? `${gameTimeText} CT` : gameTimeText);
       setAccessibleDetail(cell, titleParts.join(" | "));
     });
   }
@@ -7138,7 +7237,7 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
     return sorted[Math.floor(sorted.length / 2)];
   }
   __name(medianOf, "medianOf");
-  function annotateSetLineupRows(scoredPlayers, lineupBubbles, riskBadges, scheduleHandIndicators, dateLabels = [], changedRowKeys = /* @__PURE__ */ new Set(), changedDirections = /* @__PURE__ */ new Map(), ownStartConfirmations, categoryGaps, seasonProgress = 1) {
+  function annotateSetLineupRows(scoredPlayers, lineupBubbles, riskBadges, scheduleHandIndicators, dateLabels = [], changedRowKeys = /* @__PURE__ */ new Set(), changedDirections = /* @__PURE__ */ new Map(), ownStartConfirmations, categoryGaps, seasonProgress = 1, centralTimesByTeam) {
     const byCategory = {};
     const gameCounts = [];
     for (const p of scoredPlayers) {
@@ -7290,7 +7389,8 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
           dateLabels,
           !pitcherRow,
           pitcherRow,
-          ownStartConfirmations?.get(key)
+          ownStartConfirmations?.get(key),
+          centralTimesByTeam?.get(player.row.normalizedTeam ?? "")
         );
       }
     });
@@ -7899,12 +7999,12 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
   __name(runSetLineupAllPage, "runSetLineupAllPage");
 
   // src/content/lineup_downweight.ts
-  function applyPostedGame(proj, date, order) {
+  function applyPostedGame(proj, date, order, gamePk) {
     const games = proj.hitterGames;
     if (!games?.length) return void 0;
     const today = games.filter((g) => g.date === date);
-    if (today.length !== 1) return proj;
-    const first = today[0];
+    const first = today.length === 1 ? today[0] : gamePk != null ? today.find((g) => g.game_pk === gamePk) : void 0;
+    if (!first) return proj;
     const returning = order != null && first.return_floor > 0;
     const keys = ["PA", "AB", "R", "H", "HR", "RBI", "SB"];
     const stats = { ...proj.stats };
@@ -7956,7 +8056,7 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
       periodValue: score,
       periodP10: width == null ? void 0 : score - width,
       periodP90: width == null ? void 0 : score + width,
-      firstGame: proj.firstGame?.date === date ? {
+      firstGame: proj.firstGame?.date === date && first === today[0] ? {
         date,
         sgp: first.sgp * firstScale,
         stats: Object.fromEntries(keys.map((k) => [k, first.stats[k] * firstScale]))
@@ -8045,9 +8145,11 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
     });
     const outKeys = /* @__PURE__ */ new Set();
     const confirmedOrder = /* @__PURE__ */ new Map();
+    const postedGamePk = /* @__PURE__ */ new Map();
     rows.forEach((row) => {
       const key = `${row.normalizedName}|${row.normalizedTeam ?? ""}`;
       const bubble = lineupBubbles.get(key);
+      if (bubble?.gamePk != null) postedGamePk.set(key, bubble.gamePk);
       if (bubble?.tone === "out") {
         outKeys.add(key);
       } else if (bubble?.tone === "in") {
@@ -8069,7 +8171,7 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
         return proj;
       }
       const order = confirmedOrder.get(key);
-      const rebuilt = applyPostedGame(proj, todayIso, order);
+      const rebuilt = applyPostedGame(proj, todayIso, order, postedGamePk.get(key));
       if (rebuilt) return rebuilt;
       if (order != null) {
         const targetPa = 4.52 - 0.104 * (order - 1);
@@ -11723,6 +11825,7 @@ ${entry.breakdown}`;
           mark("f_standings");
           return v;
         });
+        const centralTimesPromise = dateLabels.length > 0 ? fetchScheduleCentralTimes(rows, dateLabels) : Promise.resolve(/* @__PURE__ */ new Map());
         const [lineupBubbles, scheduleHands, ownStartConfirmations] = reuse ? [reuse.lineupBubbles, reuse.scheduleHands, reuse.ownStartConfirmations] : await Promise.all([
           fetchLineupBubbles(rows).then((v) => {
             mark("f_bubbles");
@@ -11743,6 +11846,7 @@ ${entry.breakdown}`;
         ]);
         const standingsPending = !raced.settled;
         const contextBundle = raced.bundle;
+        const centralTimes = await centralTimesPromise;
         mark("contextReady");
         if (!reuse && !contextBundle) {
           const settle = /* @__PURE__ */ __name((bundle) => {
@@ -11859,7 +11963,8 @@ ${entry.breakdown}`;
             // League gaps, not overall: the period's realistic target is the team
             // immediately above you in your own league.
             contextBundle?.league?.categories,
-            progress
+            progress,
+            centralTimes
           );
           const sections = ensureRosterSections(viewState);
           if (sections) {
