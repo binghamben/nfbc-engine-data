@@ -3,22 +3,22 @@
     ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
-    "bookmarklet.js": "57426a2165ba568a69ca025e16be1ccb9fae73516454bf97acf8e3aceca20945",
+    "bookmarklet.js": "a80160c9dddf78dfb68103ff1f730b07f2ea7a374ab3a9ee9d55f9be7f9ff469",
     "draft2027.json": "785a1ed8e6df49fef45d5987b7a9692348fd977465e7c90b13d2c0b2505dd733",
-    "faab.json": "b0982462c2d3349b7818f44b628d327e8168a349cecbcaf5f56efbd9bfdcb845",
-    "l30.json": "ade2814afc970a05640bcb30dc5f78c5e47ea4ec1d5401d82be390224ecb194a",
-    "projections.json": "0432b828b2dfe0057fa37f3a87fdd261ac8acddf5047f62ba653c022a883fe38",
-    "projections_next.json": "b04e32dc9160a364fea8d5aea7a348bb08122732bd4316acf7f4c2a0dc69c6ae",
+    "faab.json": "b207e86c98de5b579905048b78d14723f13df1864657279ba824bbadd3b07ac5",
+    "l30.json": "c0bbe4e2cd4c1ee69ceccd21548b88029c756fa7f1d7b42dde12518230464592",
+    "projections.json": "b13da3c77530873853316e44b26371c256ff350edd4c5e80f97d7fbf54854fe3",
+    "projections_next.json": "1e39aae9a1b1eacd3ec0921f8940b182785ee8c48e62dd247d8a8ea941fb4738",
     "prospect_movement.json": "5601bf05c5a94585ff9200f350b249f1c8f518cba201970efe0e27c167d119bb",
-    "prospects.json": "5fda97b0d6454da67c0e2e5c2d3cbb6a8853ca01b2b5356bd5f361298cf453de",
+    "prospects.json": "f95ada47a777e604f610a6cd726e12a8c2b4e8660b63755d52b1b450f585ab25",
     "README.md": "2c3a2e79a81ab5ad3f62fc1984ab66273a3c406ebf4ab746d59adb4733607ed9",
-    "skills.json": "f387b2977a47f3db36599c0e6e2c64c0ff57c363b3bcb71762936722e166b798"
+    "skills.json": "2ec117544b9ec68cb585adbb54e602abb97ef664f45eb4da68e59feed9e9c51f"
   },
-  "generated_at": "2026-09-26 00:01:47.814249+00:00",
+  "generated_at": "2026-09-26 11:23:55.436323+00:00",
   "client": {
-    "source_head": "72f8e1bcee862fcab70ee2759b7119e2487bb85b",
+    "source_head": "251e0f25012d89d147c2f5d8c49d07c55b75be91",
     "working_tree_changes": false,
-    "sha256": "57426a2165ba568a69ca025e16be1ccb9fae73516454bf97acf8e3aceca20945"
+    "sha256": "a80160c9dddf78dfb68103ff1f730b07f2ea7a374ab3a9ee9d55f9be7f9ff469"
   },
-  "published_at": "2026-09-26T00:07:41.271559+00:00"
+  "published_at": "2026-09-26T11:32:59.124909+00:00"
 }
