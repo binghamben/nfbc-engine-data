@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 774b7db39d83b1a142a610f6cfd3a074521c69fd
+// NFBC_SOURCE_COMMIT 72f8e1bcee862fcab70ee2759b7119e2487bb85b
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -2614,6 +2614,22 @@
     return start;
   }
   __name(lineupPeriodStart, "lineupPeriodStart");
+  function teamLockedSince(games, periodStartTs, now) {
+    return (games ?? []).some((game) => game.startTs >= periodStartTs && game.startTs <= now);
+  }
+  __name(teamLockedSince, "teamLockedSince");
+  function markTeamLocks(rows, gamesByTeam, now) {
+    const hitterStart = lineupPeriodStart(now, true).getTime();
+    const pitcherStart = lineupPeriodStart(now, false).getTime();
+    for (const row of rows) {
+      if (row.isLocked || !row.normalizedTeam) continue;
+      const pitcher = row.currentSlot === "P" || row.eligiblePositions.length > 0 && row.eligiblePositions.every((position2) => position2 === "P");
+      if (teamLockedSince(gamesByTeam.get(row.normalizedTeam), pitcher ? pitcherStart : hitterStart, now.getTime())) {
+        row.isLocked = true;
+      }
+    }
+  }
+  __name(markTeamLocks, "markTeamLocks");
 
   // src/content/lineup_status.ts
   function localDateIso() {
@@ -9216,6 +9232,24 @@ Source: ${impact.sourceUrl}` : ""}`;
   __name(readTeamOptDisplay, "readTeamOptDisplay");
 
   // src/content/team_menu_optimizations.ts
+  async function fetchWeekGameStarts(now) {
+    const start = localDateIso3(lineupPeriodStart(now, false));
+    const url = `https://statsapi.mlb.com/api/v1/schedule?sportId=1&startDate=${start}&endDate=${localDateIso3(now)}&hydrate=team`;
+    const response = await chrome.runtime.sendMessage({ type: MESSAGE_TYPES.fetchJson, url });
+    if (!response?.ok) throw new Error(`schedule fetch failed: ${response?.error ?? "unknown"}`);
+    const schedule = response.payload;
+    const out = /* @__PURE__ */ new Map();
+    for (const day of schedule.dates ?? []) for (const game of day.games ?? []) {
+      const startTs = game.gameDate ? Date.parse(game.gameDate) : NaN;
+      if (!Number.isFinite(startTs)) continue;
+      for (const side of ["away", "home"]) {
+        const team = normalizeTeam(game.teams?.[side]?.team?.abbreviation);
+        if (team) out.set(team, [...out.get(team) ?? [], { startTs }]);
+      }
+    }
+    return out;
+  }
+  __name(fetchWeekGameStarts, "fetchWeekGameStarts");
   var INDICATOR_CLASS = "nfbc-team-opt-flag";
   function localDateIso3(d) {
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
@@ -9350,7 +9384,7 @@ Source: ${impact.sourceUrl}` : ""}`;
     }
     const allRows = plans.flatMap((plan) => plan.rows);
     const teams = Array.from(new Set(allRows.map((row) => row.normalizedTeam).filter((team) => Boolean(team))));
-    const [activeRosters, ilFlags, rosterStatus, lineupBubbles, hitterRisk, playingTime] = await Promise.all([
+    const [activeRosters, ilFlags, rosterStatus, lineupBubbles, hitterRisk, playingTime, weekGameStarts] = await Promise.all([
       fetchActiveRosterNames(teams).catch(() => /* @__PURE__ */ new Map()),
       fetchFreshIlFlags(allRows).catch(() => /* @__PURE__ */ new Map()),
       // 40-man IL: not time-windowed, unlike the transactions feed above. This
@@ -9358,8 +9392,15 @@ Source: ${impact.sourceUrl}` : ""}`;
       fetchRosterStatusByTeam(teams).catch(() => /* @__PURE__ */ new Map()),
       fetchLineupBubbles(allRows).catch(() => /* @__PURE__ */ new Map()),
       fetchHitterRiskReport(allRows).catch(() => ({ badgesByKey: /* @__PURE__ */ new Map(), partTimeCount: 0, platoonCount: 0, summaryLines: [] })),
-      fetchPlayingTimeTrends(allRows).catch(() => /* @__PURE__ */ new Map())
+      fetchPlayingTimeTrends(allRows).catch(() => /* @__PURE__ */ new Map()),
+      // The all-teams view does not disable locked players' selects; derive
+      // NFBC's Team Locked rule from MLB start times instead.
+      fetchWeekGameStarts(/* @__PURE__ */ new Date()).catch((error) => {
+        console.warn("[NFBC] team-lock schedule unavailable; scan may flag locked players", error);
+        return /* @__PURE__ */ new Map();
+      })
     ]);
+    markTeamLocks(allRows, weekGameStarts, /* @__PURE__ */ new Date());
     const todayIso = localDateIso3(/* @__PURE__ */ new Date());
     const newsImpacts = await fetchPlayerNewsImpacts().catch(() => /* @__PURE__ */ new Map());
     const activeNames = activeNameUnion(activeRosters);
