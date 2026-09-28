@@ -5,20 +5,20 @@
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
     "bookmarklet.js": "af3e713bd9977914aa632b72913ba3a23c25978bdc129ed066cdc54f9f1c6b3c",
     "draft2027.json": "785a1ed8e6df49fef45d5987b7a9692348fd977465e7c90b13d2c0b2505dd733",
-    "faab.json": "4219bf54335de16bbf10404f5cfe51d5a6a6d34fabbcb63498a302583d212eb6",
-    "l30.json": "413b9885a7f4e3f708207d82e65cfcf8091caeb05b1fcb01c49e13a2e76487bd",
-    "projections.json": "485e23d954148328f4cdb5f852e8666b0f3b7065f83ea126f2e1a8f7d92e88f9",
-    "projections_next.json": "c4156dd50d5b81d682256948a8169ce0ede96f737d2855dbb11151534edcae7e",
-    "prospect_movement.json": "5601bf05c5a94585ff9200f350b249f1c8f518cba201970efe0e27c167d119bb",
-    "prospects.json": "4f0c6ed4e7777cbe5511e037da9e9fef8857ce2181c14a2204139c9f7f1b6bdd",
+    "faab.json": "e152ce9c908cb3976f5800debcccfabba185758955aa7e935a838ead439a9e7b",
+    "l30.json": "da303d90b1460de966c7d37f13162cb8f45627f20964b255574d7e26cdf9bf85",
+    "projections.json": "4870726bcff6ff6a2807d32f65351cd0501ebe8ea200fbba101ac8f364052c7d",
+    "projections_next.json": "13cf2910c6920ff4da0ba150ac16717426fc1e57e4fbf966b9b36879318bc853",
+    "prospect_movement.json": "880d96927da221bb23d73708a4573c2cd4bbeb73c361a7c5e7e7a7ee09bb1c45",
+    "prospects.json": "8437c4d3604b7572b9975fc5e84a4f108fedeb5f6b3c5bb526e30399df5b205c",
     "README.md": "2c3a2e79a81ab5ad3f62fc1984ab66273a3c406ebf4ab746d59adb4733607ed9",
-    "skills.json": "a0eed942bdea29eb9fee7b0eea90ec28c52e03971774d21de09825419296e8d2"
+    "skills.json": "bac3b4b2150abaa4ca0f23a8301e5a648559b44ca6d4f077284b63beb0e511f9"
   },
-  "generated_at": "2026-09-28 00:01:34.676175+00:00",
+  "generated_at": "2026-09-28 11:24:26.192625+00:00",
   "client": {
-    "source_head": "d280a2eb178e8156b38f9c9c21f151afcce02be7",
+    "source_head": "077bd741513d962142f981c0c4c48f1929801c56",
     "working_tree_changes": false,
     "sha256": "af3e713bd9977914aa632b72913ba3a23c25978bdc129ed066cdc54f9f1c6b3c"
   },
-  "published_at": "2026-09-28T00:07:21.761514+00:00"
+  "published_at": "2026-09-28T11:36:25.023241+00:00"
 }
