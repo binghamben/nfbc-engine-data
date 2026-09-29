@@ -3,8 +3,9 @@
     ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
-    "bookmarklet.js": "ab06a34f49ae45ecc837bcfddac1767552f15d5e21c522276c52bcbab374c791",
+    "bookmarklet.js": "7c082bac729433b4aae976de05fd8a41478816fa419cb054661f8d667a2f1e9b",
     "draft2027.json": "785a1ed8e6df49fef45d5987b7a9692348fd977465e7c90b13d2c0b2505dd733",
+    "draft_overlay.json": "3af7f1fc20327df52c80a2d39afa22ed5f8d800378b6af7c0215344fe9825a16",
     "faab.json": "6036ae32e4a8bdaba94051a0d945d4ee255a820e0756220e75063b379408b7f5",
     "l30.json": "43e9ee7d534dd830a90c7979336fa2b4b866bee0dc4543b25386de273cd274fe",
     "projections.json": "d5ef6dbd372d8396449bb4e9c0ef7753eb6803b8d3c190795774a337b4283a79",
@@ -16,9 +17,9 @@
   },
   "generated_at": "2026-09-29 11:24:57.552848+00:00",
   "client": {
-    "source_head": "5f81df3a8a30c3790efa72da14da9678833920f0",
+    "source_head": "885e5eb1dd5ec19518dc57963ec6654d3fb848ce",
     "working_tree_changes": false,
-    "sha256": "ab06a34f49ae45ecc837bcfddac1767552f15d5e21c522276c52bcbab374c791"
+    "sha256": "7c082bac729433b4aae976de05fd8a41478816fa419cb054661f8d667a2f1e9b"
   },
-  "published_at": "2026-09-29T11:34:17.828785+00:00"
+  "published_at": "2026-09-29T14:54:04.990021+00:00"
 }

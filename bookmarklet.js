@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 5f81df3a8a30c3790efa72da14da9678833920f0
+// NFBC_SOURCE_COMMIT 885e5eb1dd5ec19518dc57963ec6654d3fb848ce
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -397,6 +397,7 @@
   var ENGINE_PROJECTIONS_URL = "http://127.0.0.1:8123/projections.json";
   var PUBLIC_ENGINE_BASE_URL = "https://raw.githubusercontent.com/binghamben/nfbc-engine-data/main/";
   var GITHUB_PROJECTIONS_URL = `${PUBLIC_ENGINE_BASE_URL}projections.json`;
+  var GITHUB_DRAFT_OVERLAY_URL = `${PUBLIC_ENGINE_BASE_URL}draft_overlay.json`;
   var OUTDATED_ENGINE_URLS = [
     "https://gist.githubusercontent.com/binghamben/13a5935d4f1b375ac81107f1f477daa2/raw/projections.json",
     "https://raw.githubusercontent.com/binghamben/nfbc_lineup_extension/master/research/data/extension/projections.json"
@@ -1858,13 +1859,13 @@
           continue;
         }
         badgesByKey.set(riskKey(player), badges);
-        if (badges.some((badge2) => badge2.label === "PT")) {
+        if (badges.some((badge3) => badge3.label === "PT")) {
           partTimeCount += 1;
         }
-        if (badges.some((badge2) => badge2.label === "Platoon")) {
+        if (badges.some((badge3) => badge3.label === "Platoon")) {
           platoonCount += 1;
         }
-        if (badges.some((badge2) => badge2.tone === "context")) contextCount += 1;
+        if (badges.some((badge3) => badge3.tone === "context")) contextCount += 1;
       }
       return {
         badgesByKey,
@@ -8147,12 +8148,12 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
         }
       }
       const risks = riskBadges.get(key) ?? [];
-      const decliningRole = risks.find((badge2) => badge2.label === "ROLE\u2193");
+      const decliningRole = risks.find((badge3) => badge3.label === "ROLE\u2193");
       if (decliningRole?.projectionMultiplier != null) {
         return scaleProjection(projection, decliningRole.projectionMultiplier, decliningRole.label);
       }
       const roleBadge = risks.find(
-        (badge2) => badge2.label === "NEW" || badge2.label === "RETURN"
+        (badge3) => badge3.label === "NEW" || badge3.label === "RETURN"
       );
       if (!roleBadge) return projection;
       const role = projection.roleBucket?.toLowerCase();
@@ -8196,7 +8197,7 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
         const currentPa = g1.stats.PA ?? 0;
         if (currentPa >= targetPa) return proj;
         const totalPa = proj.stats.PA ?? 0;
-        const ptDetail = riskBadges.get(key)?.find((badge2) => badge2.label === "PT")?.detail;
+        const ptDetail = riskBadges.get(key)?.find((badge3) => badge3.label === "PT")?.detail;
         const recent = ptDetail?.match(/^Started (\d+) of last (\d+) team games/);
         const isConfirmedSpotStart = recent != null && (Number(recent[1]) === 0 || proj.callupFlat === true && Number(recent[1]) <= 1) && Number(recent[2]) >= 8;
         const recentStarts = recent ? Number(recent[1]) : void 0;
@@ -8425,15 +8426,15 @@ body[data-nfbc-sl-only-changes="true"] .Player[data-can-set-lineup="1"]:not(.nfb
       const impact = impacts.get(normalizeName(name));
       if (!impact) continue;
       const host = link.parentElement ?? link;
-      let badge2 = host.querySelector("[data-nfbc-news]");
-      if (!badge2) {
-        badge2 = document.createElement("span");
-        badge2.dataset.nfbcNews = "1";
-        badge2.className = "nfbc-sl-badge";
-        host.append(badge2);
+      let badge3 = host.querySelector("[data-nfbc-news]");
+      if (!badge3) {
+        badge3 = document.createElement("span");
+        badge3.dataset.nfbcNews = "1";
+        badge3.className = "nfbc-sl-badge";
+        host.append(badge3);
       }
-      badge2.textContent = impact.kind === "return" ? "NEWS+" : impact.kind === "setback" ? "NEWS\u2212" : "NEWS";
-      badge2.title = `${impact.headline}
+      badge3.textContent = impact.kind === "return" ? "NEWS+" : impact.kind === "setback" ? "NEWS\u2212" : "NEWS";
+      badge3.title = `${impact.headline}
 Published: ${new Date(impact.publishedAt).toLocaleString()}${impact.sourceUrl ? `
 Source: ${impact.sourceUrl}` : ""}`;
     }
@@ -9963,18 +9964,18 @@ Source: ${impact.sourceUrl}` : ""}`;
     return document.body.dataset.nfbcExtReadability === "native";
   }
   __name(isLightTheme, "isLightTheme");
-  function styleBadge(badge2) {
-    badge2.style.display = "inline-flex";
-    badge2.style.alignItems = "center";
-    badge2.style.borderRadius = "6px";
-    badge2.style.overflow = "hidden";
-    badge2.style.fontSize = "11px";
-    badge2.style.fontWeight = "800";
-    badge2.style.lineHeight = "1.3";
-    badge2.style.whiteSpace = "nowrap";
-    badge2.style.verticalAlign = "middle";
-    badge2.style.fontVariantNumeric = "tabular-nums";
-    badge2.style.border = isLightTheme() ? "1px solid #c9d1dd" : "1px solid rgba(2, 6, 23, 0.55)";
+  function styleBadge(badge3) {
+    badge3.style.display = "inline-flex";
+    badge3.style.alignItems = "center";
+    badge3.style.borderRadius = "6px";
+    badge3.style.overflow = "hidden";
+    badge3.style.fontSize = "11px";
+    badge3.style.fontWeight = "800";
+    badge3.style.lineHeight = "1.3";
+    badge3.style.whiteSpace = "nowrap";
+    badge3.style.verticalAlign = "middle";
+    badge3.style.fontVariantNumeric = "tabular-nums";
+    badge3.style.border = isLightTheme() ? "1px solid #c9d1dd" : "1px solid rgba(2, 6, 23, 0.55)";
   }
   __name(styleBadge, "styleBadge");
   function statHue(value, low, mid, high) {
@@ -10206,14 +10207,14 @@ Source: ${impact.sourceUrl}` : ""}`;
     if (!scope) {
       return;
     }
-    let badge2 = scope.querySelector(`[data-nfbc-ext='${BADGE_KEY}']`);
+    let badge3 = scope.querySelector(`[data-nfbc-ext='${BADGE_KEY}']`);
     if (!entry) {
-      badge2?.remove();
+      badge3?.remove();
       return;
     }
-    if (!badge2) {
-      badge2 = document.createElement("span");
-      badge2.dataset.nfbcExt = BADGE_KEY;
+    if (!badge3) {
+      badge3 = document.createElement("span");
+      badge3.dataset.nfbcExt = BADGE_KEY;
     }
     const segments = [segment(formatDollars(entry.dollars), raterHue(entry.dollars), true, "L30")];
     const hover = [`Rater ${windowLabel(raterWindowDays, raterWindowEnd)} ${formatDollars(entry.dollars)}`];
@@ -10221,23 +10222,23 @@ Source: ${impact.sourceUrl}` : ""}`;
       segments.push(segment(stat.text, stat.hue, false, stat.tag, stat.neutral));
       hover.push(stat.hover);
     }
-    badge2.replaceChildren(...segments);
-    badge2.title = `${hover.join(" | ")}
+    badge3.replaceChildren(...segments);
+    badge3.title = `${hover.join(" | ")}
 ${entry.breakdown}`;
-    styleBadge(badge2);
+    styleBadge(badge3);
     const badgesBlock = scope.querySelector("[data-nfbc-ext='secondary-badges']");
     if (badgesBlock) {
-      badge2.style.margin = "0";
-      if (badge2.parentElement !== badgesBlock || badgesBlock.firstElementChild !== badge2) {
-        badgesBlock.prepend(badge2);
+      badge3.style.margin = "0";
+      if (badge3.parentElement !== badgesBlock || badgesBlock.firstElementChild !== badge3) {
+        badgesBlock.prepend(badge3);
       }
       return;
     }
     const nameRow = scope.querySelector("[data-nfbc-ext='name-row']");
     if (nameRow) {
-      badge2.style.margin = "0";
-      if (badge2.parentElement !== nameRow || nameRow.lastElementChild !== badge2) {
-        nameRow.append(badge2);
+      badge3.style.margin = "0";
+      if (badge3.parentElement !== nameRow || nameRow.lastElementChild !== badge3) {
+        nameRow.append(badge3);
       }
       return;
     }
@@ -10245,16 +10246,16 @@ ${entry.breakdown}`;
       const rowDiv = insertAfter.parentElement;
       rowDiv.style.display = "flex";
       rowDiv.style.alignItems = "center";
-      badge2.style.margin = "0";
-      badge2.style.marginLeft = "auto";
-      if (rowDiv.lastElementChild !== badge2) {
-        rowDiv.append(badge2);
+      badge3.style.margin = "0";
+      badge3.style.marginLeft = "auto";
+      if (rowDiv.lastElementChild !== badge3) {
+        rowDiv.append(badge3);
       }
     } else {
-      badge2.style.margin = "0 6px 0 0";
+      badge3.style.margin = "0 6px 0 0";
       const host = anchor.parentElement;
-      if (host && (badge2.nextElementSibling !== anchor || badge2.parentElement !== host)) {
-        host.insertBefore(badge2, anchor);
+      if (host && (badge3.nextElementSibling !== anchor || badge3.parentElement !== host)) {
+        host.insertBefore(badge3, anchor);
       }
     }
   }
@@ -12391,6 +12392,337 @@ This is the complete serialized save diff. Continue and reload the page?`
   }
   __name(runSetLineupPage, "runSetLineupPage");
 
+  // src/content/draft_overlay_core.ts
+  var DRAFT_OVERLAY_FETCH = "nfbc.draftOverlayFetch";
+  var DRAFT_OVERLAY_SETTINGS_KEY = "nfbcDraftOverlaySettings";
+  var POOL_REFRESH_MS = 5e3;
+  var SUFFIXES2 = /* @__PURE__ */ new Set(["jr", "sr", "ii", "iii", "iv"]);
+  function nameKey(name) {
+    const folded = name.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase();
+    return folded.replace(/-/g, " ").replace(/[^a-z0-9 ]+/g, "").split(/\s+/).filter((t) => t && !SUFFIXES2.has(t)).join(" ");
+  }
+  __name(nameKey, "nameKey");
+  function buildIndex(players) {
+    const index = /* @__PURE__ */ new Map();
+    for (const p of players) {
+      const list = index.get(p.k);
+      if (list) list.push(p);
+      else index.set(p.k, [p]);
+    }
+    return index;
+  }
+  __name(buildIndex, "buildIndex");
+  function pickPlayer(index, name, team, posText) {
+    const list = index.get(nameKey(name));
+    if (!list || !list.length) return null;
+    if (list.length === 1) return list[0];
+    const tokens = posText.split(/[^A-Z0-9]+/).filter(Boolean);
+    const side = tokens.length === 1 && tokens[0] === "P" ? "P" : "H";
+    const bySide = list.filter((p) => p.s === side);
+    const pool = bySide.length ? bySide : list;
+    return pool.find((p) => p.t === team) ?? pool[0];
+  }
+  __name(pickPlayer, "pickPlayer");
+  function remainingRanks(players, pool) {
+    const available = pool ? new Set(pool.filter((e) => !e.drafted).map((e) => e.key)) : null;
+    const sorted = players.filter((p) => p.er != null).sort((a, b) => a.er - b.er);
+    const ranks = /* @__PURE__ */ new Map();
+    let next = 1;
+    for (const p of sorted) {
+      if (ranks.has(p.k)) continue;
+      if (available && !available.has(p.k)) continue;
+      ranks.set(p.k, available ? next++ : p.er);
+    }
+    const byUpside = players.filter((p) => p.uv != null).sort((a, b) => b.uv - a.uv);
+    let nextUp = 1;
+    for (const p of byUpside) {
+      const key = `up:${p.k}`;
+      if (ranks.has(key)) continue;
+      if (available && !available.has(p.k)) continue;
+      ranks.set(key, nextUp++);
+    }
+    return ranks;
+  }
+  __name(remainingRanks, "remainingRanks");
+  var UPSIDE_MIN_GAP = 15;
+  function rankColor(rank) {
+    if (rank == null) return "#8a8f98";
+    if (rank <= 12) return "#0b7a3b";
+    if (rank <= 48) return "#1a6fb3";
+    if (rank <= 120) return "#6b4fbb";
+    return "#7a6a3a";
+  }
+  __name(rankColor, "rankColor");
+  var STYLE_ID = "nfbc-draft-overlay-style";
+  function ensureStyle() {
+    if (document.getElementById(STYLE_ID)) return;
+    const style = document.createElement("style");
+    style.id = STYLE_ID;
+    style.textContent = `
+    td.nfbc-ov-cell{position:relative}
+    .nfbc-ov{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;gap:4px;align-items:center;font:600 11px/1 system-ui,sans-serif;white-space:nowrap}
+    .nfbc-ov.nfbc-ov-q{right:34px}
+    .nfbc-ov.nfbc-ov-inline{position:static;transform:none;margin-left:6px;vertical-align:middle}
+    .nfbc-ov-flag{margin-left:6px;font:700 10px/1 system-ui,sans-serif;color:#fff;background:#c62828;border-radius:3px;padding:2px 5px;white-space:nowrap;vertical-align:middle}
+    tr.nfbc-ov-bad>td{background:#fdecea !important}
+    .nfbc-ov b{color:#fff;border-radius:3px;padding:2px 5px;font-weight:700;min-width:26px;text-align:center}
+    .nfbc-ov i{font-style:normal;color:#444;background:#eef0f3;border-radius:3px;padding:2px 5px}
+    .nfbc-ov em{font-style:normal;color:#0b5d2b;background:#dcfce7;border:1px solid #86efac;border-radius:3px;padding:1px 4px}
+    .nfbc-ov-pos{margin-left:5px;font:600 10px/1 system-ui,sans-serif;color:#b35a00;background:#fff3e0;border-radius:3px;padding:2px 4px;white-space:nowrap;vertical-align:middle}
+    .nfbc-ov-banner{position:fixed;right:10px;bottom:10px;z-index:99999;background:#1f2937;color:#fff;font:13px system-ui;padding:8px 12px;border-radius:6px}
+  `;
+    document.head.appendChild(style);
+  }
+  __name(ensureStyle, "ensureStyle");
+  function badge2(p, rank, showRank = true, upRank = null) {
+    const el = document.createElement("span");
+    el.className = "nfbc-ov";
+    if (showRank) {
+      const rk = document.createElement("b");
+      rk.style.background = rankColor(rank);
+      rk.textContent = rank != null ? `#${rank}` : "\u2014";
+      el.appendChild(rk);
+    }
+    if (p.sgp != null) {
+      const sgp = document.createElement("i");
+      sgp.textContent = `${p.sgp.toFixed(1)} SGP`;
+      el.appendChild(sgp);
+    }
+    if (showRank && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
+      const up = document.createElement("em");
+      up.textContent = `\u2191#${upRank}`;
+      el.appendChild(up);
+    }
+    const lines = [
+      `Engine rank among remaining: ${rank ?? "\u2014"} (overall ${p.er ?? "\u2014"})`,
+      `SGP ${p.sgp ?? "\u2014"} \xB7 VOR ${p.vor ?? "\u2014"} \xB7 $${p.d ?? "\u2014"} \xB7 Tier ${p.tier ?? "\u2014"}`,
+      `2027 pos: ${p.pos || "\u2014"}`
+    ];
+    if (p.uv != null) {
+      lines.push(`Upside rank among remaining: ${upRank ?? "\u2014"} \xB7 full-role chance ${p.pf != null ? Math.round(p.pf * 100) : "\u2014"}%`);
+    }
+    if (p.tg) lines.push(`Path: ${p.tg}`);
+    el.title = lines.join("\n");
+    return el;
+  }
+  __name(badge2, "badge");
+  var normPos = /* @__PURE__ */ __name((s) => s.split(/[^A-Z0-9]+/).filter((t) => t && t !== "UT" && t !== "DH").sort().join("/"), "normPos");
+  function annotateRow(row, index, ranks) {
+    const nameEl = row.querySelector(".heavy-name");
+    const name = row.querySelector(".heavy-name [format]")?.textContent?.trim() ?? nameEl?.textContent?.trim() ?? "";
+    if (!nameEl || !name) return;
+    const posEl = row.querySelector(".pos");
+    const posCell = posEl?.closest("td");
+    const team = posCell?.nextElementSibling?.textContent?.trim() ?? "";
+    const shownPos = (posEl?.textContent ?? "").replace(/\s+/g, "");
+    const player = pickPlayer(index, name, team, posEl?.textContent ?? "");
+    const rank = player ? ranks.get(player.k) ?? null : null;
+    const up = player ? ranks.get(`up:${player.k}`) ?? null : null;
+    const stamp = `${name}|${team}|${rank}|${up}`;
+    if (row.dataset.nfbcOv === stamp) return;
+    row.dataset.nfbcOv = stamp;
+    row.querySelectorAll(".nfbc-ov, .nfbc-ov-pos").forEach((e) => e.remove());
+    if (!player) return;
+    const cell = nameEl.closest("td");
+    if (cell) {
+      cell.classList.add("nfbc-ov-cell");
+      cell.appendChild(badge2(player, rank, true, up));
+    }
+    if (posEl && player.pos && normPos(player.pos) !== normPos(shownPos)) {
+      const tag = document.createElement("span");
+      tag.className = "nfbc-ov-pos";
+      tag.textContent = `2027: ${player.pos.replace(/,/g, "/")}`;
+      posEl.insertAdjacentElement("afterend", tag);
+    }
+  }
+  __name(annotateRow, "annotateRow");
+  function annotateQueueItem(item, index, ranks) {
+    const nameEl = item.querySelector(".name [format]");
+    const name = nameEl?.textContent?.trim() ?? "";
+    const info = item.querySelector(".name");
+    if (!nameEl || !name || !info) return;
+    const infoText = Array.from(info.childNodes).filter((n2) => n2.nodeType === Node.TEXT_NODE).map((n2) => n2.textContent ?? "").join("").trim();
+    const parsed = infoText.match(/^,?\s*(.*?)\s*,\s*([A-Za-z]{2,4})$/);
+    const shownPos = (parsed ? parsed[1] : infoText.replace(/^,\s*/, "")).replace(/\s+/g, "");
+    const team = parsed ? parsed[2] : "";
+    const player = pickPlayer(index, name, team, shownPos.replace(/\//g, " "));
+    const rank = player ? ranks.get(player.k) ?? null : null;
+    const up = player ? ranks.get(`up:${player.k}`) ?? null : null;
+    const stamp = `${name}|${team}|${rank}|${up}`;
+    if (item.dataset.nfbcOv === stamp) return;
+    item.dataset.nfbcOv = stamp;
+    item.querySelectorAll(".nfbc-ov, .nfbc-ov-pos").forEach((e) => e.remove());
+    if (!player) return;
+    item.classList.add("nfbc-ov-cell");
+    const b = badge2(player, rank, true, up);
+    b.classList.add("nfbc-ov-q");
+    item.appendChild(b);
+    if (player.pos && normPos(player.pos) !== normPos(shownPos)) {
+      const tag = document.createElement("span");
+      tag.className = "nfbc-ov-pos";
+      tag.textContent = `2027: ${player.pos.replace(/,/g, "/")}`;
+      info.appendChild(tag);
+    }
+  }
+  __name(annotateQueueItem, "annotateQueueItem");
+  function slotEligible(slot, positions) {
+    const has = new Set(positions.toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean));
+    switch (slot.toUpperCase()) {
+      case "C":
+      case "1B":
+      case "2B":
+      case "3B":
+      case "SS":
+      case "OF":
+        return has.has(slot.toUpperCase());
+      case "CI":
+        return has.has("1B") || has.has("3B");
+      case "MI":
+        return has.has("2B") || has.has("SS");
+      case "UT":
+        return [...has].some((t) => t !== "P");
+      case "P":
+        return has.has("P");
+      default:
+        return true;
+    }
+  }
+  __name(slotEligible, "slotEligible");
+  function annotateRosterRow(row, index) {
+    const name = row.querySelector("[format]")?.textContent?.trim() ?? "";
+    const select = row.querySelector("select");
+    const slot = (select?.selectedOptions[0]?.textContent ?? select?.value ?? "").replace(/^string:/, "").trim();
+    if (!name) return;
+    const player = pickPlayer(index, name, "", "");
+    const stamp = `${name}|${slot}`;
+    if (row.dataset.nfbcOv === stamp) return;
+    row.dataset.nfbcOv = stamp;
+    row.querySelectorAll(".nfbc-ov, .nfbc-ov-pos, .nfbc-ov-flag").forEach((e) => e.remove());
+    row.classList.remove("nfbc-ov-bad");
+    const host = row.querySelector("[format]")?.closest("td");
+    if (!player || !host) return;
+    const b = badge2(player, null, false);
+    b.classList.add("nfbc-ov-inline");
+    if (player.sgp != null) host.appendChild(b);
+    if (slot && !slotEligible(slot, player.pos)) {
+      const flag = document.createElement("span");
+      flag.className = "nfbc-ov-flag";
+      flag.textContent = `\u26A0 not ${slot}-eligible 2027`;
+      flag.title = `2027 eligibility: ${player.pos || "none"}`;
+      host.appendChild(flag);
+      row.classList.add("nfbc-ov-bad");
+    }
+  }
+  __name(annotateRosterRow, "annotateRosterRow");
+  function annotateNextPick(box, index, ranks) {
+    const nameEl = box.querySelector("[format]");
+    const name = nameEl?.textContent?.trim() ?? "";
+    if (!name) return;
+    const infoText = Array.from(box.childNodes).filter((n2) => n2.nodeType === Node.TEXT_NODE).map((n2) => n2.textContent ?? "").join("").trim();
+    const parsed = infoText.match(/^,?\s*(.*?)\s*,\s*([A-Za-z]{2,4})$/);
+    const shownPos = (parsed ? parsed[1] : infoText.replace(/^,\s*/, "")).replace(/\s+/g, "");
+    const team = parsed ? parsed[2] : "";
+    const player = pickPlayer(index, name, team, shownPos.replace(/\//g, " "));
+    const rank = player ? ranks.get(player.k) ?? null : null;
+    const up = player ? ranks.get(`up:${player.k}`) ?? null : null;
+    const stamp = `${name}|${team}|${rank}|${up}`;
+    if (box.dataset.nfbcOv === stamp) return;
+    box.dataset.nfbcOv = stamp;
+    box.querySelectorAll(".nfbc-ov, .nfbc-ov-pos").forEach((e) => e.remove());
+    if (!player) return;
+    const b = badge2(player, rank, true, up);
+    b.classList.add("nfbc-ov-inline");
+    box.appendChild(b);
+    if (player.pos && normPos(player.pos) !== normPos(shownPos)) {
+      const tag = document.createElement("span");
+      tag.className = "nfbc-ov-pos";
+      tag.textContent = `2027: ${player.pos.replace(/,/g, "/")}`;
+      box.appendChild(tag);
+    }
+  }
+  __name(annotateNextPick, "annotateNextPick");
+  function sendFetch(mode) {
+    return new Promise((resolve) => {
+      chrome.runtime.sendMessage({ type: DRAFT_OVERLAY_FETCH, mode }, (resp) => {
+        resolve(chrome.runtime.lastError ? { ok: false, error: chrome.runtime.lastError.message } : resp);
+      });
+    });
+  }
+  __name(sendFetch, "sendFetch");
+  async function getSettings2() {
+    const stored = await chrome.storage.local.get(DRAFT_OVERLAY_SETTINGS_KEY);
+    return stored[DRAFT_OVERLAY_SETTINGS_KEY] ?? {};
+  }
+  __name(getSettings2, "getSettings");
+  function showBanner(text2) {
+    document.querySelectorAll(".nfbc-ov-banner").forEach((e) => e.remove());
+    const el = document.createElement("div");
+    el.className = "nfbc-ov-banner";
+    el.textContent = text2;
+    document.body.appendChild(el);
+  }
+  __name(showBanner, "showBanner");
+  function detectMode(settings) {
+    if (settings.mode) return settings.mode;
+    const rounds = Number(document.body.innerText.match(/(\d+)-Round/)?.[1] ?? 0);
+    return rounds >= 40 ? "DC" : "ME";
+  }
+  __name(detectMode, "detectMode");
+  async function fetchPool() {
+    const draftId = location.pathname.match(/\/dp\/(\d+)/)?.[1];
+    if (!draftId) return null;
+    try {
+      const resp = await fetch(`/api/public/players/dp/${draftId}`, { credentials: "include" });
+      if (!resp.ok) return null;
+      const rows = await resp.json();
+      return rows.map((r) => ({ key: nameKey(`${r.f ?? ""} ${r.l ?? ""}`), drafted: Boolean(r.pick) }));
+    } catch {
+      return null;
+    }
+  }
+  __name(fetchPool, "fetchPool");
+  function overlayPlayersFromDocument(doc, mode) {
+    const boards = doc ?? {};
+    const list = boards[mode] ?? boards.DC ?? [];
+    return Array.isArray(list) ? list : [];
+  }
+  __name(overlayPlayersFromDocument, "overlayPlayersFromDocument");
+  async function mountDraftOverlay(options = {}) {
+    ensureStyle();
+    const settings = options.settings ?? await getSettings2();
+    const mode = detectMode(settings);
+    const resp = await (options.load ? options.load(mode) : sendFetch(mode));
+    if (!resp.ok || !resp.players) {
+      showBanner(`Rank overlay unavailable: ${resp.error ?? "no data"}`);
+      return;
+    }
+    const players = resp.players;
+    const index = buildIndex(players);
+    let ranks = remainingRanks(players, null);
+    const run = /* @__PURE__ */ __name(() => {
+      document.querySelectorAll("tr.select-player").forEach((row) => annotateRow(row, index, ranks));
+      document.querySelectorAll('[ng-repeat="pid in queue.draftQueue"]').forEach((item) => annotateQueueItem(item, index, ranks));
+      document.querySelectorAll('[ng-repeat="player in dr.thisRoster"]').forEach((row) => annotateRosterRow(row, index));
+      document.querySelectorAll(".queue-pannel .next-auto").forEach((box) => annotateNextPick(box, index, ranks));
+    }, "run");
+    const refreshPool = /* @__PURE__ */ __name(async () => {
+      const pool = await fetchPool();
+      if (pool) {
+        ranks = remainingRanks(players, pool);
+        run();
+      }
+    }, "refreshPool");
+    let timer;
+    new MutationObserver(() => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(run, 150);
+    }).observe(document.body, { childList: true, subtree: true });
+    await refreshPool();
+    run();
+    window.setInterval(() => void refreshPool(), POOL_REFRESH_MS);
+  }
+  __name(mountDraftOverlay, "mountDraftOverlay");
+
   // src/bookmarklet/setlineup.ts
   installChromeShim();
   var BANNER_ID = "nfbc-bookmarklet-banner";
@@ -12457,7 +12789,37 @@ This is the complete serialized save diff. Continue and reload the page?`
     return document.body.hasAttribute("data-nfbc-ext-readability") || document.getElementById("nfbc-setlineup-shell") != null || document.getElementById("nfbc-extension-panel") != null;
   }
   __name(extensionAlreadyActive, "extensionAlreadyActive");
+  async function runDraftOverlay() {
+    if (document.getElementById("nfbc-draft-overlay-style")) {
+      banner("NFBC extension is already running here \u2014 bookmarklet not needed");
+      dismissBanner(6e3);
+      return;
+    }
+    banner("NFBC: loading draft rankings\u2026");
+    await mountDraftOverlay({
+      settings: {},
+      load: /* @__PURE__ */ __name(async (mode) => {
+        const response = await fetch(`${GITHUB_DRAFT_OVERLAY_URL}?v=${Date.now()}`, { cache: "no-store" });
+        if (!response.ok) return { ok: false, error: `HTTP ${response.status}` };
+        const players = overlayPlayersFromDocument(await response.json(), mode);
+        return players.length ? { ok: true, players } : { ok: false, error: "no players in the published feed" };
+      }, "load")
+    });
+    banner("NFBC: draft rankings ready");
+    dismissBanner(2500);
+  }
+  __name(runDraftOverlay, "runDraftOverlay");
   async function main() {
+    if (window.location.hostname === "draft.shgn.com") {
+      try {
+        await runDraftOverlay();
+      } catch (error) {
+        banner(`NFBC draft overlay failed: ${String(error)}`, "error");
+        dismissBanner(12e3);
+        console.error("[NFBC] draft overlay", error);
+      }
+      return;
+    }
     if (extensionAlreadyActive()) {
       banner("NFBC extension is already running here \u2014 bookmarklet not needed");
       dismissBanner(6e3);
