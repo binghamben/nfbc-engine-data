@@ -11482,8 +11482,8 @@ ${entry.breakdown}`;
       if (!player.row.isBench) {
         return false;
       }
-      const rowKey = `${player.row.normalizedName}|${player.row.normalizedTeam ?? ""}`;
-      return Boolean(riskBadges.get(rowKey)?.length) || player.warnings.length > 0;
+      const rowKey2 = `${player.row.normalizedName}|${player.row.normalizedTeam ?? ""}`;
+      return Boolean(riskBadges.get(rowKey2)?.length) || player.warnings.length > 0;
     }).length;
   }
   __name(benchRiskCount, "benchRiskCount");
@@ -12423,23 +12423,24 @@ This is the complete serialized save diff. Continue and reload the page?`
     return pool.find((p) => p.t === team) ?? pool[0];
   }
   __name(pickPlayer, "pickPlayer");
+  function rowKey(p) {
+    return `${p.k}|${p.s}|${p.t}`;
+  }
+  __name(rowKey, "rowKey");
   function remainingRanks(players, pool) {
     const available = pool ? new Set(pool.filter((e) => !e.drafted).map((e) => e.key)) : null;
     const sorted = players.filter((p) => p.er != null).sort((a, b) => a.er - b.er);
     const ranks = /* @__PURE__ */ new Map();
     let next = 1;
     for (const p of sorted) {
-      if (ranks.has(p.k)) continue;
       if (available && !available.has(p.k)) continue;
-      ranks.set(p.k, available ? next++ : p.er);
+      ranks.set(rowKey(p), available ? next++ : p.er);
     }
     const byUpside = players.filter((p) => p.uv != null).sort((a, b) => b.uv - a.uv);
     let nextUp = 1;
     for (const p of byUpside) {
-      const key = `up:${p.k}`;
-      if (ranks.has(key)) continue;
       if (available && !available.has(p.k)) continue;
-      ranks.set(key, nextUp++);
+      ranks.set(`up:${rowKey(p)}`, nextUp++);
     }
     return ranks;
   }
@@ -12494,7 +12495,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       el.appendChild(up);
     }
     const lines = [
-      `Engine rank among remaining: ${rank ?? "\u2014"} (overall ${p.er ?? "\u2014"})`,
+      `Engine rank among remaining: ${rank ?? "\u2014"} \xB7 board rank ${p.er ?? "\u2014"}`,
       `SGP ${p.sgp ?? "\u2014"} \xB7 VOR ${p.vor ?? "\u2014"} \xB7 $${p.d ?? "\u2014"} \xB7 Tier ${p.tier ?? "\u2014"}`,
       `2027 pos: ${p.pos || "\u2014"}`
     ];
@@ -12516,8 +12517,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     const team = posCell?.nextElementSibling?.textContent?.trim() ?? "";
     const shownPos = (posEl?.textContent ?? "").replace(/\s+/g, "");
     const player = pickPlayer(index, name, team, posEl?.textContent ?? "");
-    const rank = player ? ranks.get(player.k) ?? null : null;
-    const up = player ? ranks.get(`up:${player.k}`) ?? null : null;
+    const rank = player ? ranks.get(rowKey(player)) ?? null : null;
+    const up = player ? ranks.get(`up:${rowKey(player)}`) ?? null : null;
     const stamp = `${name}|${team}|${rank}|${up}`;
     if (row.dataset.nfbcOv === stamp) return;
     row.dataset.nfbcOv = stamp;
@@ -12546,8 +12547,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     const shownPos = (parsed ? parsed[1] : infoText.replace(/^,\s*/, "")).replace(/\s+/g, "");
     const team = parsed ? parsed[2] : "";
     const player = pickPlayer(index, name, team, shownPos.replace(/\//g, " "));
-    const rank = player ? ranks.get(player.k) ?? null : null;
-    const up = player ? ranks.get(`up:${player.k}`) ?? null : null;
+    const rank = player ? ranks.get(rowKey(player)) ?? null : null;
+    const up = player ? ranks.get(`up:${rowKey(player)}`) ?? null : null;
     const stamp = `${name}|${team}|${rank}|${up}`;
     if (item.dataset.nfbcOv === stamp) return;
     item.dataset.nfbcOv = stamp;
@@ -12623,8 +12624,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     const shownPos = (parsed ? parsed[1] : infoText.replace(/^,\s*/, "")).replace(/\s+/g, "");
     const team = parsed ? parsed[2] : "";
     const player = pickPlayer(index, name, team, shownPos.replace(/\//g, " "));
-    const rank = player ? ranks.get(player.k) ?? null : null;
-    const up = player ? ranks.get(`up:${player.k}`) ?? null : null;
+    const rank = player ? ranks.get(rowKey(player)) ?? null : null;
+    const up = player ? ranks.get(`up:${rowKey(player)}`) ?? null : null;
     const stamp = `${name}|${team}|${rank}|${up}`;
     if (box.dataset.nfbcOv === stamp) return;
     box.dataset.nfbcOv = stamp;
