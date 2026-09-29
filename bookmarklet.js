@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT ecfd641740d4c3b475a0471964a5728e537d5280
+// NFBC_SOURCE_COMMIT d00145a6204cff7336544ae1bf373cdd32e85a27
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12484,9 +12484,10 @@ This is the complete serialized save diff. Continue and reload the page?`
       rk.textContent = rank != null ? `#${rank}` : "\u2014";
       el.appendChild(rk);
     }
-    if (p.sgp != null) {
+    const shown = p.vor ?? p.sgp;
+    if (shown != null) {
       const sgp = document.createElement("i");
-      sgp.textContent = p.sgp.toFixed(1);
+      sgp.textContent = shown.toFixed(1);
       el.appendChild(sgp);
     }
     if (showRank && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
