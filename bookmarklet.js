@@ -12486,7 +12486,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     }
     if (p.sgp != null) {
       const sgp = document.createElement("i");
-      sgp.textContent = `${p.sgp.toFixed(1)} SGP`;
+      sgp.textContent = p.sgp.toFixed(1);
       el.appendChild(sgp);
     }
     if (showRank && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
