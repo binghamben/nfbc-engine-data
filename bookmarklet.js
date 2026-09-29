@@ -12491,7 +12491,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     }
     if (showRank && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
       const up = document.createElement("em");
-      up.textContent = `\u2191#${upRank}`;
+      up.textContent = `Up #${upRank}`;
+      up.title = `Upside rank among remaining players (playing-time scenarios): ${upRank}`;
       el.appendChild(up);
     }
     const lines = [
