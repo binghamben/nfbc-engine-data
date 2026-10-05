@@ -3,23 +3,23 @@
     ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
-    "bookmarklet.js": "cb2da847733f135d4528eb9dc53b9eb71ffeec9be93f0e6fb0885a7a40af2e00",
+    "bookmarklet.js": "6759a9387bba01995fb0c224f6fc6a5498ede1952a4a142907cb67b6fe6ebf2a",
     "draft2027.json": "8de700c5b3f5e8bc7f4f98d6a02ff8f64c2c329bfe537097caa9068895adf2bb",
     "draft_overlay.json": "d90f335718d0e3e228bc3578fca485a494fcb3c467f20253ef84ffcd90f134b8",
-    "faab.json": "712b640f9487d26a72d039308e5d7f700f4583e7086943897cc31cb82c9998fc",
-    "l30.json": "fe469842002499a60eb9b1da58c82dfac944bc398ac03fc8401903ff7936dbb7",
-    "projections.json": "4435747c49ba90df0d5e6e1ed396af453e822015fed854320bb7d11e30c06112",
-    "projections_next.json": "b0ff6b88b1df765eda354441614e2be2ca1175ef7add36b1f99c8e309db3db8c",
+    "faab.json": "0f6a8a9919cf2736bc6495f7d74c05d4b99da793e3ebbfed755340787e6e145d",
+    "l30.json": "53bac67c40fd4bfb4c3e86fc67ddd9f41e1430df931316fd152cc427dbaa9c62",
+    "projections.json": "15d519a6bb2529ad0187a6ef0cc02e328072bf140d80b27da5138b263a62fe22",
+    "projections_next.json": "910bf34bcdb05b10781242be32ac36db9427ed4580989d365d9896cd1820e79d",
     "prospect_movement.json": "06c077dea37952eb7c0660db72e8a20a2e80cdd3cce1b35337596ea8c23ceb4f",
     "prospects.json": "d0cf72e45af27e7a0dc11b9e5829370b41811defc412d7baf4a3d530fe9915dd",
     "README.md": "2c3a2e79a81ab5ad3f62fc1984ab66273a3c406ebf4ab746d59adb4733607ed9",
-    "skills.json": "245b4eaa4071c2129aaf62dc7838c978975f3381abf1105899df5e46081e86e8"
+    "skills.json": "b5a63b723445f4fa5d37320b279f96ead8a59ec8679dc9d694b671a7d68bd4fe"
   },
-  "generated_at": "2026-10-05 17:01:40.632299+00:00",
+  "generated_at": "2026-10-05 19:01:45.029207+00:00",
   "client": {
-    "source_head": "f1f7e6f1447f3d3dd4bc09c7f00c3838f84c7fd8",
+    "source_head": "abb1bf8248b6063a7f2bca9e9505179c8937165d",
     "working_tree_changes": false,
-    "sha256": "cb2da847733f135d4528eb9dc53b9eb71ffeec9be93f0e6fb0885a7a40af2e00"
+    "sha256": "6759a9387bba01995fb0c224f6fc6a5498ede1952a4a142907cb67b6fe6ebf2a"
   },
-  "published_at": "2026-10-05T18:42:53.521064+00:00"
+  "published_at": "2026-10-05T19:08:13.798967+00:00"
 }
