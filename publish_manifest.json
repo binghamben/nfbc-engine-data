@@ -5,21 +5,21 @@
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
     "bookmarklet.js": "6759a9387bba01995fb0c224f6fc6a5498ede1952a4a142907cb67b6fe6ebf2a",
     "draft2027.json": "9627e8cea1d17ff1ae14ae03de11b0e9f7c3074510f90f658058c0dc5cad08c0",
-    "draft_overlay.json": "4189e624ac4d616ef29ea113c5ef09d255756a514a284aaebd91801e6543cff9",
-    "faab.json": "e34f3246a7f25bc54e4b67716cc0749d811ce07a6b8890c39aec7513c8c1c101",
-    "l30.json": "7a813aec3feea68f420e0c467468673ac9e677467e6ba48599fd0d9c0b463a0f",
-    "projections.json": "27b342a5faa1c684ff269205954e783242d8ab53d348feb7c04e83795fcd3b75",
-    "projections_next.json": "e7fb4b495f8c290f02cc30f8ef29f4195ccd8b03751ad0d4b316d43d225c4d6a",
+    "draft_overlay.json": "7af1a541cea195ac42fdb415989e5cb06884ec02572900ee9762b7094de60fd8",
+    "faab.json": "3290c6e69824de7820d7c4b9c5c107785d356b9960333e5719e7b5f20a21387c",
+    "l30.json": "cbf5ad9ed0dc1e3a1968babf7cfb57f208d18d454dc923faa480ad53427a102a",
+    "projections.json": "90f1b2d7f944a9eec8a580c6bb60f3d4f873580766476a4ed54c4787d3e1cef0",
+    "projections_next.json": "a65e94cdba187da367653239459fae70fac9e0f6e7c5b8cfdde66bf2ad347e79",
     "prospect_movement.json": "f7ef2d1f85b03745b13a385f1122b5cc1f19ffcd01d6b19a3588251cd044ac74",
     "prospects.json": "78325e8ab8dfb44ca8cafdd5a51a78cbf856a781667a4da8cb983ca5c08b4fe6",
     "README.md": "2c3a2e79a81ab5ad3f62fc1984ab66273a3c406ebf4ab746d59adb4733607ed9",
-    "skills.json": "96fd13c348dd6a64727ee39bfe8b3ae27b4e1faa6246f66b30484fad1b81fd18"
+    "skills.json": "3c537f2a6647873142c99b90b736aeddf619763926e4fb8fecc36988b16741cc"
   },
-  "generated_at": "2026-10-07 17:01:41.882971+00:00",
+  "generated_at": "2026-10-07 19:01:41.316108+00:00",
   "client": {
-    "source_head": "91f146600dd7ff9598c5ccf4c57da8dedf008762",
+    "source_head": "dbde6fff1fa35ae3f978c7ab259327cadfb300a2",
     "working_tree_changes": false,
     "sha256": "6759a9387bba01995fb0c224f6fc6a5498ede1952a4a142907cb67b6fe6ebf2a"
   },
-  "published_at": "2026-10-07T17:08:01.849943+00:00"
+  "published_at": "2026-10-07T19:08:05.648313+00:00"
 }
