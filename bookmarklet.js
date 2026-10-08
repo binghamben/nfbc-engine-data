@@ -12468,6 +12468,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     tr.nfbc-ov-bad>td{background:#fdecea !important}
     .nfbc-ov b{color:#fff;border-radius:3px;padding:2px 5px;font-weight:700;min-width:26px;text-align:center}
     .nfbc-ov i{font-style:normal;color:#444;background:#eef0f3;border-radius:3px;padding:2px 5px}
+    .nfbc-ov u{text-decoration:none;color:#8a3b00;background:#ffe9d5;border:1px solid #f5b98a;border-radius:3px;padding:1px 4px}
     .nfbc-ov em{font-style:normal;color:#0b5d2b;background:#dcfce7;border:1px solid #86efac;border-radius:3px;padding:1px 4px}
     .nfbc-ov-pos{margin-left:5px;font:600 10px/1 system-ui,sans-serif;color:#b35a00;background:#fff3e0;border-radius:3px;padding:2px 4px;white-space:nowrap;vertical-align:middle}
     .nfbc-ov-banner{position:fixed;right:10px;bottom:10px;z-index:99999;background:#1f2937;color:#fff;font:13px system-ui;padding:8px 12px;border-radius:6px}
@@ -12495,6 +12496,11 @@ This is the complete serialized save diff. Continue and reload the page?`
       adp.textContent = `ADP ${p.adp.toFixed(1)}`;
       el.appendChild(adp);
     }
+    if (showRank && p.pti) {
+      const pti = document.createElement("u");
+      pti.textContent = "PTI";
+      el.appendChild(pti);
+    }
     if (showRank && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
       const up = document.createElement("em");
       up.textContent = `Up #${upRank}`;
@@ -12507,6 +12513,9 @@ This is the complete serialized save diff. Continue and reload the page?`
       `2027 pos: ${p.pos || "\u2014"}`
     ];
     if (p.adp != null) lines.push(`Live DC ADP ${p.adp.toFixed(1)} across ${p.adpn ?? "?"} drafts (our own count of 2027 DC drafts)`);
+    if (p.pti) {
+      lines.push(`PTI: played through a ${p.pti.toLowerCase()} injury in 2026; such hitters average about -.045 OPS vs projection the next year${p.hv != null ? ` \xB7 VOR ${p.vor ?? "\u2014"} \u2192 ${p.hv} with an experimental haircut` : ""}`);
+    }
     if (p.uv != null) {
       lines.push(`Upside rank among remaining: ${upRank ?? "\u2014"} \xB7 full-role chance ${p.pf != null ? Math.round(p.pf * 100) : "\u2014"}%`);
     }
