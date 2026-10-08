@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 440f1d652f1aa2a35e4338611a8672bd095858b1
+// NFBC_SOURCE_COMMIT 9b92853824d96f68ff2225b4a463badff0f870a1
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12514,7 +12514,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     ];
     if (p.adp != null) lines.push(`Live DC ADP ${p.adp.toFixed(1)} across ${p.adpn ?? "?"} drafts (our own count of 2027 DC drafts)`);
     if (p.pti) {
-      lines.push(`PTI: played through a ${p.pti.toLowerCase()} injury in 2026; such hitters average about -.045 OPS vs projection the next year${p.hv != null ? ` \xB7 VOR ${p.vor ?? "\u2014"} \u2192 ${p.hv} with an experimental haircut` : ""}`);
+      lines.push(`PTI: played through a ${p.pti.toLowerCase()} injury in 2026; such hitters average about -.045 OPS vs projection the next year. Already reflected in this projection.`);
     }
     if (p.uv != null) {
       lines.push(`Upside rank among remaining: ${upRank ?? "\u2014"} \xB7 full-role chance ${p.pf != null ? Math.round(p.pf * 100) : "\u2014"}%`);
