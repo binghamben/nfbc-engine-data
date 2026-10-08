@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT abb1bf8248b6063a7f2bca9e9505179c8937165d
+// NFBC_SOURCE_COMMIT 440f1d652f1aa2a35e4338611a8672bd095858b1
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12490,6 +12490,11 @@ This is the complete serialized save diff. Continue and reload the page?`
       sgp.textContent = shown.toFixed(1);
       el.appendChild(sgp);
     }
+    if (showRank && p.adp != null) {
+      const adp = document.createElement("i");
+      adp.textContent = `ADP ${p.adp.toFixed(1)}`;
+      el.appendChild(adp);
+    }
     if (showRank && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
       const up = document.createElement("em");
       up.textContent = `Up #${upRank}`;
@@ -12501,6 +12506,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       `SGP ${p.sgp ?? "\u2014"} \xB7 VOR ${p.vor ?? "\u2014"} \xB7 $${p.d ?? "\u2014"} \xB7 Tier ${p.tier ?? "\u2014"}`,
       `2027 pos: ${p.pos || "\u2014"}`
     ];
+    if (p.adp != null) lines.push(`Live DC ADP ${p.adp.toFixed(1)} across ${p.adpn ?? "?"} drafts (our own count of 2027 DC drafts)`);
     if (p.uv != null) {
       lines.push(`Upside rank among remaining: ${upRank ?? "\u2014"} \xB7 full-role chance ${p.pf != null ? Math.round(p.pf * 100) : "\u2014"}%`);
     }
