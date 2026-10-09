@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 91a8ad25a5491ca3d7c38d8cca9433f81fc6ad46
+// NFBC_SOURCE_COMMIT 57bf6d18dd200dc98018487937a738bcb05e5115
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12396,6 +12396,17 @@ This is the complete serialized save diff. Continue and reload the page?`
   var DRAFT_OVERLAY_FETCH = "nfbc.draftOverlayFetch";
   var DRAFT_OVERLAY_SETTINGS_KEY = "nfbcDraftOverlaySettings";
   var POOL_REFRESH_MS = 5e3;
+  var poolTeam = /* @__PURE__ */ __name((t) => (t ?? "").toUpperCase().replace(/^WSH$|^WSN$/, "WAS").replace(/^CHW$/, "CWS"), "poolTeam");
+  function isAvailable(p, byName) {
+    let entries = byName.get(p.k);
+    if (!entries || !entries.length) return false;
+    const side = entries.filter((e) => e.pitcher == null || e.pitcher === (p.s === "P"));
+    if (side.length) entries = side;
+    const team = entries.filter((e) => poolTeam(e.team) === poolTeam(p.t));
+    if (team.length) entries = team;
+    return entries.some((e) => !e.drafted);
+  }
+  __name(isAvailable, "isAvailable");
   var SUFFIXES2 = /* @__PURE__ */ new Set(["jr", "sr", "ii", "iii", "iv"]);
   function nameKey(name) {
     const folded = name.normalize("NFKD").replace(/[̀-ͯ]/g, "").toLowerCase();
@@ -12428,18 +12439,27 @@ This is the complete serialized save diff. Continue and reload the page?`
   }
   __name(rowKey, "rowKey");
   function remainingRanks(players, pool) {
-    const available = pool ? new Set(pool.filter((e) => !e.drafted).map((e) => e.key)) : null;
+    const byName = /* @__PURE__ */ new Map();
+    for (const e of pool ?? []) {
+      const list = byName.get(e.key);
+      if (list) list.push(e);
+      else byName.set(e.key, [e]);
+    }
+    const available = pool ? (p) => isAvailable(p, byName) : null;
     const sorted = players.filter((p) => p.er != null).sort((a, b) => a.er - b.er);
     const ranks = /* @__PURE__ */ new Map();
+    for (const p of players) {
+      if (!available || available(p)) ranks.set(`avail:${rowKey(p)}`, 1);
+    }
     let next = 1;
     for (const p of sorted) {
-      if (available && !available.has(p.k)) continue;
+      if (available && !available(p)) continue;
       ranks.set(rowKey(p), available ? next++ : p.er);
     }
     const byUpside = players.filter((p) => p.uv != null).sort((a, b) => b.uv - a.uv);
     let nextUp = 1;
     for (const p of byUpside) {
-      if (available && !available.has(p.k)) continue;
+      if (available && !available(p)) continue;
       ranks.set(`up:${rowKey(p)}`, nextUp++);
     }
     return ranks;
@@ -12461,57 +12481,104 @@ This is the complete serialized save diff. Continue and reload the page?`
     style.id = STYLE_ID;
     style.textContent = `
     td.nfbc-ov-cell{position:relative}
-    .nfbc-ov{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;gap:4px;align-items:center;font:600 11px/1 system-ui,sans-serif;white-space:nowrap}
+    .nfbc-ov{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;gap:3px;align-items:center;font:600 11px/1 system-ui,sans-serif;white-space:nowrap}
     .nfbc-ov.nfbc-ov-q{right:34px}
     .nfbc-ov.nfbc-ov-inline{position:static;transform:none;margin-left:6px;vertical-align:middle}
     .nfbc-ov-flag{margin-left:6px;font:700 10px/1 system-ui,sans-serif;color:#fff;background:#c62828;border-radius:3px;padding:2px 5px;white-space:nowrap;vertical-align:middle}
     tr.nfbc-ov-bad>td{background:#fdecea !important}
     .nfbc-ov b{color:#fff;border-radius:3px;padding:2px 5px;font-weight:700;min-width:26px;text-align:center}
     .nfbc-ov i{font-style:normal;color:#444;background:#eef0f3;border-radius:3px;padding:2px 5px}
+    .nfbc-ov i.nfbc-c-adp{color:#1e3a8a;background:#e0e9ff}
     .nfbc-ov u{text-decoration:none;color:#8a3b00;background:#ffe9d5;border:1px solid #f5b98a;border-radius:3px;padding:1px 4px}
     .nfbc-ov em{font-style:normal;color:#0b5d2b;background:#dcfce7;border:1px solid #86efac;border-radius:3px;padding:1px 4px}
+    .nfbc-ov.nfbc-ov-a b,.nfbc-ov.nfbc-ov-a i,.nfbc-ov.nfbc-ov-a em{display:inline-block;box-sizing:border-box;text-align:center;min-width:0}
+    .nfbc-ov.nfbc-ov-a b{width:34px}
+    .nfbc-ov.nfbc-ov-a i.nfbc-c-vor{width:28px}
+    .nfbc-ov.nfbc-ov-a i.nfbc-c-adp{width:42px}
+    .nfbc-ov.nfbc-ov-a em{width:42px}
+    .nfbc-ov.nfbc-ov-a .nfbc-empty{visibility:hidden}
     .nfbc-ov-pos{margin-left:5px;font:600 10px/1 system-ui,sans-serif;color:#b35a00;background:#fff3e0;border-radius:3px;padding:2px 4px;white-space:nowrap;vertical-align:middle}
+    #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;padding:4px 8px;display:flex;flex-direction:column;gap:5px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff}
+    #nfbc-best .row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow:hidden;white-space:nowrap}
+    #nfbc-best .lbl{flex:0 0 92px;color:#555;font-weight:700}
+    #nfbc-best .chip{display:inline-flex;gap:4px;align-items:center;border:1px solid #d5d9e0;border-radius:4px;padding:2px 5px;background:#f8f9fb;cursor:pointer;flex:0 0 auto}
+    #nfbc-best .chip:hover{background:#e8f0fe;border-color:#9bb8f0}
+    #nfbc-best .chip b{color:#fff;border-radius:3px;padding:1px 4px;font-weight:700}
+    #nfbc-best .chip i{font-style:normal;border-radius:3px;padding:1px 4px}
+    #nfbc-best .chip .ps{color:#777;font-weight:600}
     .nfbc-ov-banner{position:fixed;right:10px;bottom:10px;z-index:99999;background:#1f2937;color:#fff;font:13px system-ui;padding:8px 12px;border-radius:6px}
   `;
     document.head.appendChild(style);
   }
   __name(ensureStyle, "ensureStyle");
-  function badge2(p, rank, showRank = true, upRank = null) {
+  function vorTone(v) {
+    if (v >= 5) return { fg: "#fff", bg: "#15803d" };
+    if (v >= 3) return { fg: "#14532d", bg: "#86efac" };
+    if (v >= 1.5) return { fg: "#14532d", bg: "#dcfce7" };
+    if (v >= 0) return { fg: "#444", bg: "#eef0f3" };
+    return { fg: "#991b1b", bg: "#fee2e2" };
+  }
+  __name(vorTone, "vorTone");
+  function badge2(p, rank, showRank = true, upRank = null, compact = false) {
     const el = document.createElement("span");
-    el.className = "nfbc-ov";
+    el.className = showRank && !compact ? "nfbc-ov nfbc-ov-a" : "nfbc-ov";
+    const aligned = showRank && !compact;
+    const hole = /* @__PURE__ */ __name((tag, cls = "") => {
+      const e = document.createElement(tag);
+      e.className = `${cls} nfbc-empty`.trim();
+      e.textContent = "\xA0";
+      el.appendChild(e);
+    }, "hole");
     if (showRank) {
       const rk = document.createElement("b");
       rk.style.background = rankColor(rank);
-      rk.textContent = rank != null ? `#${rank}` : "\u2014";
+      rk.textContent = rank != null ? `#${rank}` : p.fv != null ? `FV${p.fv}` : "\u2014";
+      if (rank == null && p.fv != null) rk.style.background = "#7c6f9b";
       el.appendChild(rk);
     }
     const shown = p.vor ?? p.sgp;
-    if (shown != null) {
+    if (shown == null && p.pv != null && showRank) {
+      const pv = document.createElement("i");
+      pv.className = "nfbc-c-vor";
+      pv.textContent = p.pv.toFixed(1);
+      pv.style.color = "#4c3b7a";
+      pv.style.background = "#e9e2f7";
+      el.appendChild(pv);
+    } else if (shown != null) {
       const sgp = document.createElement("i");
+      sgp.className = "nfbc-c-vor";
       sgp.textContent = shown.toFixed(1);
+      const tone = vorTone(shown);
+      sgp.style.color = tone.fg;
+      sgp.style.background = tone.bg;
       el.appendChild(sgp);
-    }
+    } else if (aligned) hole("i", "nfbc-c-vor");
     if (showRank && p.adp != null) {
       const adp = document.createElement("i");
-      adp.textContent = `ADP ${p.adp.toFixed(1)}`;
+      adp.className = "nfbc-c-adp";
+      adp.textContent = p.adp.toFixed(1);
+      adp.title = "Live DC ADP";
       el.appendChild(adp);
-    }
-    if (showRank && p.pti) {
-      const pti = document.createElement("u");
-      pti.textContent = "PTI";
-      el.appendChild(pti);
-    }
-    if (showRank && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
+    } else if (aligned) hole("i", "nfbc-c-adp");
+    if (aligned && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
       const up = document.createElement("em");
-      up.textContent = `Up #${upRank}`;
+      up.textContent = `Up ${upRank}`;
       up.title = `Upside rank among remaining players (playing-time scenarios): ${upRank}`;
       el.appendChild(up);
-    }
+    } else if (aligned) hole("em");
     const lines = [
       `Engine rank among remaining: ${rank ?? "\u2014"} \xB7 board rank ${p.er ?? "\u2014"}`,
       `SGP ${p.sgp ?? "\u2014"} \xB7 VOR ${p.vor ?? "\u2014"} \xB7 $${p.d ?? "\u2014"} \xB7 Tier ${p.tier ?? "\u2014"}`,
       `2027 pos: ${p.pos || "\u2014"}`
     ];
+    if (p.er == null && (p.pv != null || p.fv != null)) {
+      lines.splice(
+        0,
+        lines.length,
+        `Prospect, no 2027 line: engine talent value ${p.pv ?? "\u2014"} SGP at full opportunity (a talent grade, not a 2027 VOR) \xB7 FV ${p.fv ?? "\u2014"}`,
+        `Engine outlook: ${p.eta ?? "\u2014"}`
+      );
+    }
     if (p.adp != null) lines.push(`Live DC ADP ${p.adp.toFixed(1)} across ${p.adpn ?? "?"} drafts (our own count of 2027 DC drafts)`);
     if (p.pti) {
       lines.push(`PTI: played through a ${p.pti.toLowerCase()} injury in 2026; such hitters average about -.045 OPS vs projection the next year. Already reflected in this projection.`);
@@ -12572,7 +12639,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     item.querySelectorAll(".nfbc-ov, .nfbc-ov-pos").forEach((e) => e.remove());
     if (!player) return;
     item.classList.add("nfbc-ov-cell");
-    const b = badge2(player, rank, true, up);
+    const b = badge2(player, rank, true, up, true);
     b.classList.add("nfbc-ov-q");
     item.appendChild(b);
     if (player.pos && normPos(player.pos) !== normPos(shownPos)) {
@@ -12648,7 +12715,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     box.dataset.nfbcOv = stamp;
     box.querySelectorAll(".nfbc-ov, .nfbc-ov-pos").forEach((e) => e.remove());
     if (!player) return;
-    const b = badge2(player, rank, true, up);
+    const b = badge2(player, rank, true, up, true);
     b.classList.add("nfbc-ov-inline");
     box.appendChild(b);
     if (player.pos && normPos(player.pos) !== normPos(shownPos)) {
@@ -12680,12 +12747,106 @@ This is the complete serialized save diff. Continue and reload the page?`
     document.body.appendChild(el);
   }
   __name(showBanner, "showBanner");
-  function detectMode(settings) {
+  async function detectMode(settings) {
     if (settings.mode) return settings.mode;
-    const rounds = Number(document.body.innerText.match(/(\d+)-Round/)?.[1] ?? 0);
+    for (let i = 0; i < 40 && !/Scoring Rules/i.test(document.body.innerText); i++) {
+      await new Promise((resolve) => window.setTimeout(resolve, 250));
+    }
+    const text2 = document.body.innerText;
+    if (/Draft Champions/i.test(text2)) return "DC";
+    const rounds = Number(text2.match(/(\d+)-Round/)?.[1] ?? 0);
     return rounds >= 40 ? "DC" : "ME";
   }
   __name(detectMode, "detectMode");
+  var BEST_N = 12;
+  function shortPos(p) {
+    if (p.s === "P") return "P";
+    const parts = (p.pos || "").split(",").filter((x) => x && x !== "UT");
+    return parts.length ? parts.join("/") : "UT";
+  }
+  __name(shortPos, "shortPos");
+  function renderBestAvailable(players, ranks) {
+    const panel = document.querySelector(".selected-player-pannel");
+    if (!panel) return;
+    let strip = panel.querySelector("#nfbc-best");
+    if (!strip) {
+      panel.style.position = "relative";
+      strip = document.createElement("div");
+      strip.id = "nfbc-best";
+      panel.appendChild(strip);
+    }
+    const selected = panel.querySelector(".player-container");
+    strip.style.display = selected && !selected.classList.contains("ng-hide") ? "none" : "flex";
+    const avail = players.filter((p) => ranks.has(`avail:${rowKey(p)}`));
+    const best = avail.filter((p) => ranks.has(rowKey(p))).slice().sort((a, b) => ranks.get(rowKey(a)) - ranks.get(rowKey(b))).slice(0, BEST_N);
+    const byAdp = avail.filter((p) => p.adp != null).sort((a, b) => a.adp - b.adp).slice(0, BEST_N);
+    const stamp = [...best, ...byAdp].map((p) => `${rowKey(p)}:${ranks.get(rowKey(p))}`).join(",");
+    if (strip.dataset.stamp === stamp) return;
+    strip.dataset.stamp = stamp;
+    strip.textContent = "";
+    const addRow = /* @__PURE__ */ __name((label, list, chip) => {
+      const row = document.createElement("div");
+      row.className = "row";
+      const l = document.createElement("span");
+      l.className = "lbl";
+      l.textContent = label;
+      row.appendChild(l);
+      for (const p of list) {
+        const c = document.createElement("span");
+        c.className = "chip";
+        c.title = `${p.n} (${p.t}) \u2014 click to find in the list`;
+        chip(p, c);
+        c.addEventListener("click", () => findPlayer(p.n ?? ""));
+        row.appendChild(c);
+      }
+      strip.appendChild(row);
+      while (row.clientWidth > 0 && row.scrollWidth > row.clientWidth && row.lastElementChild !== l) {
+        row.lastElementChild?.remove();
+      }
+    }, "addRow");
+    const nameSpan = /* @__PURE__ */ __name((p) => {
+      const n2 = document.createElement("span");
+      n2.textContent = p.n ?? "";
+      return n2;
+    }, "nameSpan");
+    const posSpan = /* @__PURE__ */ __name((p) => {
+      const e = document.createElement("span");
+      e.className = "ps";
+      e.textContent = shortPos(p);
+      return e;
+    }, "posSpan");
+    addRow("Best available", best, (p, c) => {
+      const rk = document.createElement("b");
+      const r = ranks.get(rowKey(p));
+      rk.style.background = rankColor(r);
+      rk.textContent = `#${r}`;
+      c.append(rk, nameSpan(p), posSpan(p));
+      if (p.vor != null) {
+        const v = document.createElement("i");
+        const tone = vorTone(p.vor);
+        v.style.color = tone.fg;
+        v.style.background = tone.bg;
+        v.textContent = p.vor.toFixed(1);
+        c.appendChild(v);
+      }
+    });
+    addRow("Top ADP (ours)", byAdp, (p, c) => {
+      const a = document.createElement("i");
+      a.style.color = "#1e3a8a";
+      a.style.background = "#e0e9ff";
+      a.textContent = p.adp.toFixed(1);
+      c.append(a, nameSpan(p), posSpan(p));
+    });
+  }
+  __name(renderBestAvailable, "renderBestAvailable");
+  function findPlayer(name) {
+    const input = document.querySelector('input[placeholder="Find a player"]');
+    if (!input || !name) return;
+    const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value")?.set;
+    setter?.call(input, name);
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  __name(findPlayer, "findPlayer");
   async function fetchPool() {
     const draftId = location.pathname.match(/\/dp\/(\d+)/)?.[1];
     if (!draftId) return null;
@@ -12693,7 +12854,11 @@ This is the complete serialized save diff. Continue and reload the page?`
       const resp = await fetch(`/api/public/players/dp/${draftId}`, { credentials: "include" });
       if (!resp.ok) return null;
       const rows = await resp.json();
-      return rows.map((r) => ({ key: nameKey(`${r.f ?? ""} ${r.l ?? ""}`), drafted: Boolean(r.pick) }));
+      return rows.map((r) => {
+        const elig = r.elig ?? [];
+        const pitcher = !elig.length ? null : elig.every((e) => e === "P") ? true : elig.includes("P") ? null : false;
+        return { key: nameKey(`${r.f ?? ""} ${r.l ?? ""}`), drafted: Boolean(r.pick), team: r.t, pitcher };
+      });
     } catch {
       return null;
     }
@@ -12708,7 +12873,7 @@ This is the complete serialized save diff. Continue and reload the page?`
   async function mountDraftOverlay(options = {}) {
     ensureStyle();
     const settings = options.settings ?? await getSettings2();
-    const mode = detectMode(settings);
+    const mode = await detectMode(settings);
     const resp = await (options.load ? options.load(mode) : sendFetch(mode));
     if (!resp.ok || !resp.players) {
       showBanner(`Rank overlay unavailable: ${resp.error ?? "no data"}`);
@@ -12718,6 +12883,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const index = buildIndex(players);
     let ranks = remainingRanks(players, null);
     const run = /* @__PURE__ */ __name(() => {
+      renderBestAvailable(players, ranks);
       document.querySelectorAll("tr.select-player").forEach((row) => annotateRow(row, index, ranks));
       document.querySelectorAll('[ng-repeat="pid in queue.draftQueue"]').forEach((item) => annotateQueueItem(item, index, ranks));
       document.querySelectorAll('[ng-repeat="player in dr.thisRoster"]').forEach((row) => annotateRosterRow(row, index));
