@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 57bf6d18dd200dc98018487937a738bcb05e5115
+// NFBC_SOURCE_COMMIT 1a360ace9acbf4e4f594b961e8b527d9292c0bb3
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12765,6 +12765,24 @@ This is the complete serialized save diff. Continue and reload the page?`
     return parts.length ? parts.join("/") : "UT";
   }
   __name(shortPos, "shortPos");
+  function alignStripToHeading(panel, strip) {
+    const heading = panel.querySelector("h4");
+    if (!heading) return;
+    const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+    let node = walker.nextNode();
+    while (node && !(node.textContent ?? "").trim()) node = walker.nextNode();
+    if (!node) return;
+    const range = document.createRange();
+    range.selectNodeContents(node);
+    const text2 = range.getBoundingClientRect();
+    if (!text2.width) return;
+    const indent = Math.round(text2.left - panel.getBoundingClientRect().left);
+    if (indent >= 4 && indent <= 40) {
+      strip.style.paddingLeft = `${indent}px`;
+      strip.style.paddingRight = `${Math.min(indent, 12)}px`;
+    }
+  }
+  __name(alignStripToHeading, "alignStripToHeading");
   function renderBestAvailable(players, ranks) {
     const panel = document.querySelector(".selected-player-pannel");
     if (!panel) return;
@@ -12775,6 +12793,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       strip.id = "nfbc-best";
       panel.appendChild(strip);
     }
+    alignStripToHeading(panel, strip);
     const selected = panel.querySelector(".player-container");
     strip.style.display = selected && !selected.classList.contains("ng-hide") ? "none" : "flex";
     const avail = players.filter((p) => ranks.has(`avail:${rowKey(p)}`));
