@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 1a360ace9acbf4e4f594b961e8b527d9292c0bb3
+// NFBC_SOURCE_COMMIT 3994675d03df654a7a33012e8716ef05a1b33806
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12499,7 +12499,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     .nfbc-ov.nfbc-ov-a .nfbc-empty{visibility:hidden}
     .nfbc-ov-pos{margin-left:5px;font:600 10px/1 system-ui,sans-serif;color:#b35a00;background:#fff3e0;border-radius:3px;padding:2px 4px;white-space:nowrap;vertical-align:middle}
     #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;padding:4px 8px;display:flex;flex-direction:column;gap:5px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff}
-    #nfbc-best .row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow:hidden;white-space:nowrap}
+    #nfbc-best .nfbc-row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow:hidden;white-space:nowrap}
     #nfbc-best .lbl{flex:0 0 92px;color:#555;font-weight:700}
     #nfbc-best .chip{display:inline-flex;gap:4px;align-items:center;border:1px solid #d5d9e0;border-radius:4px;padding:2px 5px;background:#f8f9fb;cursor:pointer;flex:0 0 auto}
     #nfbc-best .chip:hover{background:#e8f0fe;border-color:#9bb8f0}
@@ -12805,7 +12805,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     strip.textContent = "";
     const addRow = /* @__PURE__ */ __name((label, list, chip) => {
       const row = document.createElement("div");
-      row.className = "row";
+      row.className = "nfbc-row";
       const l = document.createElement("span");
       l.className = "lbl";
       l.textContent = label;
