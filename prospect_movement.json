@@ -1,8 +1,8 @@
 {
   "movement_schema_version": 1,
-  "generated": "2026-10-11T11:38:04Z",
-  "current_snapshot": "2026-10-11",
-  "comparison_snapshot": "2026-10-10",
+  "generated": "2026-10-12T11:39:12Z",
+  "current_snapshot": "2026-10-12",
+  "comparison_snapshot": "2026-10-11",
   "ranking_field": "expected_sgp",
   "current_model_version": "v7",
   "current_schema_version": 3,
