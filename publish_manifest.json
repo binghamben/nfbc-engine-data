@@ -5,7 +5,7 @@
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
     "bookmarklet.js": "6ee43f2f7efe9466b80cf25c3bfb7ab093b6b2ae47a99ebd2885b257ba84f7cd",
     "draft2027.json": "1df6d4bc0446435f5232c97ca9366492d4669bd2384b32e9301213bd0aeb8836",
-    "draft_overlay.json": "2b7c5b9c4c02d9ff85e2ce14ad1d2143ac2c94e0fce0c64cafb40307da9ebf4d",
+    "draft_overlay.json": "c1592e436822a8f9b7f5ac711ab2d846f44b47d446bff33332f7bbb4fbee4bf8",
     "faab.json": "882de865846d53c68ea97e62897f11b5b893d91f71d2df3fa8769f36576cfe3f",
     "l30.json": "16088dcdf1c21f93e4f5f1ba54eaa787ee0f9e5e97ebe76bfcd2701028a589aa",
     "projections.json": "7e228542df90119554c8d38fa2f05ede9e84c6b07c750d36b0254a766365f942",
@@ -21,5 +21,5 @@
     "working_tree_changes": false,
     "sha256": "6ee43f2f7efe9466b80cf25c3bfb7ab093b6b2ae47a99ebd2885b257ba84f7cd"
   },
-  "published_at": "2026-10-18T00:07:52.505637+00:00"
+  "published_at": "2026-10-18T01:38:37.412227+00:00"
 }
