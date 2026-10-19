@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT fdf7bfb3b5854e7fb8100a52809c0edab1b0633d
+// NFBC_SOURCE_COMMIT 4ed38b05d51f1b6b9c6c6fc5d001d15d077dbccf
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12489,6 +12489,9 @@ This is the complete serialized save diff. Continue and reload the page?`
     .nfbc-ov b{box-sizing:border-box;color:#fff;border:1px solid rgba(0,0,0,.08);border-radius:4px;padding:3px 5px;font-weight:700;line-height:1;min-width:26px;text-align:center}
     .nfbc-ov i{box-sizing:border-box;font-style:normal;color:#444;background:#eef0f3;border:1px solid rgba(0,0,0,.07);border-radius:4px;padding:3px 5px;line-height:1}
     .nfbc-ov i.nfbc-c-adp{color:#1e3a8a;background:#e0e9ff;border-color:#b9c9ef}
+    .nfbc-ov i.nfbc-c-adp[data-confidence="low"]{border-style:dashed;color:#64748b;background:#f1f5f9}
+    .nfbc-ov i.nfbc-c-adp[data-confidence="medium"]{border-color:#93a8d8}
+    .nfbc-ov[data-market="value"] b{box-shadow:0 0 0 2px #f59e0b}
     .nfbc-ov u{text-decoration:none;color:#8a3b00;background:#ffe9d5;border:1px solid #f5b98a;border-radius:4px;padding:2px 4px}
     .nfbc-ov em{font-style:normal;color:#0b5d2b;background:#dcfce7;border:1px solid #86efac;border-radius:4px;padding:2px 4px}
     .nfbc-ov.nfbc-ov-a b,.nfbc-ov.nfbc-ov-a i,.nfbc-ov.nfbc-ov-a em{display:inline-block;box-sizing:border-box;text-align:center;min-width:0}
@@ -12499,10 +12502,19 @@ This is the complete serialized save diff. Continue and reload the page?`
     .nfbc-ov.nfbc-ov-a .nfbc-empty{visibility:hidden}
     .nfbc-ov-pos{margin-left:5px;font:600 10px/1 system-ui,sans-serif;color:#b35a00;background:#fff3e0;border-radius:3px;padding:2px 4px;white-space:nowrap;vertical-align:middle}
     #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;box-sizing:border-box;padding:7px 8px 6px;display:flex;flex-direction:column;justify-content:center;gap:6px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff;border-top:1px solid #e5e7eb}
-    #nfbc-best .nfbc-row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow:hidden;white-space:nowrap}
-    #nfbc-best .lbl{flex:0 0 92px;color:#4b5563;font-size:10px;font-weight:750;letter-spacing:.035em;text-transform:uppercase}
+    #nfbc-best .nfbc-row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;white-space:nowrap}
+    #nfbc-best .lbl{position:sticky;left:0;z-index:2;flex:0 0 92px;color:#4b5563;background:#fff;font-size:10px;font-weight:750;letter-spacing:.035em;text-transform:uppercase}
     #nfbc-best .chip{display:inline-flex;gap:4px;align-items:center;min-height:22px;box-sizing:border-box;border:1px solid #d5d9e0;border-radius:5px;padding:2px 5px;background:#f8f9fb;box-shadow:0 1px 1px rgba(15,23,42,.04);cursor:pointer;flex:0 0 auto}
     #nfbc-best .chip:hover{background:#e8f0fe;border-color:#9bb8f0;box-shadow:0 1px 3px rgba(30,64,175,.14)}
+    #nfbc-best .chip[data-market="value"]{border-color:#f0ad4e;background:#fff8e8}
+    #nfbc-best .chip[data-queued="true"]{border-color:#8b5cf6;background:#f5f3ff}
+    #nfbc-best .chip[data-queued="true"]::before{content:"\u2713Q";color:#6d28d9;font-size:9px;font-weight:800}
+    #nfbc-best .need{color:#0f766e;background:#e6fffb;border-radius:3px;padding:1px 3px;font-size:9px;font-weight:750}
+    #nfbc-best .edge{color:#9a5a00;font-size:9px;font-weight:800}
+    #nfbc-best .sample{color:#64748b;font-size:9px;font-weight:700}
+    #nfbc-best .sample[data-confidence="low"]{color:#b45309;text-decoration:underline dashed;text-underline-offset:2px}
+    #nfbc-best .sample[data-confidence="high"]{color:#15803d}
+    #nfbc-best .legend{position:absolute;right:10px;top:-22px;color:#4b5563;font-size:9px;font-weight:650;letter-spacing:.015em;pointer-events:none}
     #nfbc-best .chip b{color:#fff;border-radius:3px;padding:1px 4px;font-weight:700}
     #nfbc-best .chip i{font-style:normal;border-radius:3px;padding:1px 4px}
     #nfbc-best .chip .ps{color:#777;font-weight:600}
@@ -12556,8 +12568,9 @@ This is the complete serialized save diff. Continue and reload the page?`
     if (showRank && p.adp != null) {
       const adp = document.createElement("i");
       adp.className = "nfbc-c-adp";
+      adp.dataset.confidence = adpConfidence(p.adpn);
       adp.textContent = p.adp.toFixed(1);
-      adp.title = "Live DC ADP";
+      adp.title = `Live DC ADP \xB7 ${p.adpn ?? 0} usable draft${p.adpn === 1 ? "" : "s"} \xB7 ${adpConfidence(p.adpn)} confidence`;
       el.appendChild(adp);
     } else if (aligned) hole("i", "nfbc-c-adp");
     if (aligned && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
@@ -12587,6 +12600,11 @@ This is the complete serialized save diff. Continue and reload the page?`
       lines.push(`Upside rank among remaining: ${upRank ?? "\u2014"} \xB7 full-role chance ${p.pf != null ? Math.round(p.pf * 100) : "\u2014"}%`);
     }
     if (p.tg) lines.push(`Path: ${p.tg}`);
+    const marketGap = adpValueGap(p);
+    if (marketGap != null) {
+      el.dataset.market = "value";
+      lines.push(`Value flag: engine board is ${marketGap} picks earlier than live ADP`);
+    }
     el.title = lines.join("\n");
     return el;
   }
@@ -12783,6 +12801,30 @@ This is the complete serialized save diff. Continue and reload the page?`
     }
   }
   __name(alignStripToHeading, "alignStripToHeading");
+  function adpConfidence(n2) {
+    if (!n2 || n2 < 1) return "none";
+    if (n2 < 4) return "low";
+    if (n2 < 10) return "medium";
+    return "high";
+  }
+  __name(adpConfidence, "adpConfidence");
+  function adpValueGap(p) {
+    if (p.er == null || p.adp == null || (p.adpn ?? 0) < 4) return null;
+    const gap = Math.round(p.adp - p.er);
+    return gap >= Math.max(20, Math.round(p.adp * 0.2)) ? gap : null;
+  }
+  __name(adpValueGap, "adpValueGap");
+  function needLabel(p, openSlots) {
+    const open = new Set(openSlots.map((s) => s.toUpperCase()).filter((s) => s && s !== "RES"));
+    const pos = new Set(p.pos.toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean));
+    const direct = ["C", "1B", "2B", "SS", "3B", "OF", "P"].find((slot) => open.has(slot) && pos.has(slot));
+    if (direct) return direct;
+    if (open.has("MI") && (pos.has("2B") || pos.has("SS"))) return "MI";
+    if (open.has("CI") && (pos.has("1B") || pos.has("3B"))) return "CI";
+    if (open.has("UT") && p.s === "H") return "UT";
+    return null;
+  }
+  __name(needLabel, "needLabel");
   function setPanelHeading(panel, boardVisible) {
     const heading = panel.querySelector("h4");
     if (!heading) return;
@@ -12795,6 +12837,25 @@ This is the complete serialized save diff. Continue and reload the page?`
     node.textContent = boardVisible ? "Draft Board" : "Selected Player";
   }
   __name(setPanelHeading, "setPanelHeading");
+  function openRosterSlots() {
+    const slots = [];
+    document.querySelectorAll('[ng-repeat="player in dr.thisRoster"]').forEach((row) => {
+      if (row.querySelector("[format]")) return;
+      const slot = row.querySelector("td")?.textContent?.trim().toUpperCase() ?? "";
+      if (slot && slot !== "RES") slots.push(slot);
+    });
+    return slots;
+  }
+  __name(openRosterSlots, "openRosterSlots");
+  function queuedPlayerNames() {
+    const queued = /* @__PURE__ */ new Set();
+    document.querySelectorAll('[ng-repeat="pid in queue.draftQueue"] [format]').forEach((el) => {
+      const key = nameKey(el.textContent?.trim() ?? "");
+      if (key) queued.add(key);
+    });
+    return queued;
+  }
+  __name(queuedPlayerNames, "queuedPlayerNames");
   function renderBestAvailable(players, ranks) {
     const panel = document.querySelector(".selected-player-pannel");
     if (!panel) return;
@@ -12813,10 +12874,21 @@ This is the complete serialized save diff. Continue and reload the page?`
     const avail = players.filter((p) => ranks.has(`avail:${rowKey(p)}`));
     const best = avail.filter((p) => ranks.has(rowKey(p))).slice().sort((a, b) => ranks.get(rowKey(a)) - ranks.get(rowKey(b))).slice(0, BEST_N);
     const byAdp = avail.filter((p) => p.adp != null).sort((a, b) => a.adp - b.adp).slice(0, BEST_N);
-    const stamp = [...best, ...byAdp].map((p) => `${rowKey(p)}:${ranks.get(rowKey(p))}`).join(",");
+    const openSlots = openRosterSlots();
+    const queued = queuedPlayerNames();
+    const stamp = [
+      ...[...best, ...byAdp].map((p) => `${rowKey(p)}:${ranks.get(rowKey(p))}`),
+      `open:${openSlots.sort().join("/")}`,
+      `queue:${[...queued].sort().join("/")}`
+    ].join(",");
     if (strip.dataset.stamp === stamp) return;
     strip.dataset.stamp = stamp;
     strip.textContent = "";
+    const legend = document.createElement("span");
+    legend.className = "legend";
+    legend.textContent = "# rank \xB7 green value/VOR \xB7 blue ADP \xB7 n sample";
+    legend.title = "Rank is among remaining players. Value is VOR. ADP is live NFBC Draft Champions ADP. n is the usable per-player draft sample.";
+    strip.appendChild(legend);
     const addRow = /* @__PURE__ */ __name((label, list, chip) => {
       const row = document.createElement("div");
       row.className = "nfbc-row";
@@ -12828,14 +12900,33 @@ This is the complete serialized save diff. Continue and reload the page?`
         const c = document.createElement("span");
         c.className = "chip";
         c.title = `${p.n} (${p.t}) \u2014 click to find in the list`;
+        if (queued.has(p.k)) {
+          c.dataset.queued = "true";
+          c.title += " \xB7 already in your NFBC queue";
+        }
+        const gap = adpValueGap(p);
+        if (gap != null) {
+          c.dataset.market = "value";
+          c.title += ` \xB7 engine board ${gap} picks earlier than ADP`;
+        }
         chip(p, c);
+        const need = needLabel(p, openSlots);
+        if (need) {
+          const marker = document.createElement("span");
+          marker.className = "need";
+          marker.textContent = `${need} open`;
+          c.appendChild(marker);
+        }
+        if (gap != null) {
+          const edge = document.createElement("span");
+          edge.className = "edge";
+          edge.textContent = `+${gap}`;
+          c.appendChild(edge);
+        }
         c.addEventListener("click", () => findPlayer(p.n ?? ""));
         row.appendChild(c);
       }
       strip.appendChild(row);
-      while (row.clientWidth > 0 && row.scrollWidth > row.clientWidth && row.lastElementChild !== l) {
-        row.lastElementChild?.remove();
-      }
     }, "addRow");
     const nameSpan = /* @__PURE__ */ __name((p) => {
       const n2 = document.createElement("span");
@@ -12868,7 +12959,12 @@ This is the complete serialized save diff. Continue and reload the page?`
       a.style.color = "#1e3a8a";
       a.style.background = "#e0e9ff";
       a.textContent = p.adp.toFixed(1);
-      c.append(a, nameSpan(p), posSpan(p));
+      const sample = document.createElement("span");
+      sample.className = "sample";
+      sample.dataset.confidence = adpConfidence(p.adpn);
+      sample.textContent = `n${p.adpn ?? 0}`;
+      sample.title = `${p.adpn ?? 0} usable draft observations \xB7 ${adpConfidence(p.adpn)} confidence`;
+      c.append(a, nameSpan(p), posSpan(p), sample);
     });
   }
   __name(renderBestAvailable, "renderBestAvailable");
