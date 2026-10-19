@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT db137aab50b34647de070c9128104d32b3017c68
+// NFBC_SOURCE_COMMIT fdf7bfb3b5854e7fb8100a52809c0edab1b0633d
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12783,6 +12783,18 @@ This is the complete serialized save diff. Continue and reload the page?`
     }
   }
   __name(alignStripToHeading, "alignStripToHeading");
+  function setPanelHeading(panel, boardVisible) {
+    const heading = panel.querySelector("h4");
+    if (!heading) return;
+    const walker = document.createTreeWalker(heading, NodeFilter.SHOW_TEXT);
+    let node = walker.nextNode();
+    while (node && !(node.textContent ?? "").trim()) node = walker.nextNode();
+    if (!node) return;
+    const current = (node.textContent ?? "").trim();
+    if (current !== "Selected Player" && current !== "Draft Board") return;
+    node.textContent = boardVisible ? "Draft Board" : "Selected Player";
+  }
+  __name(setPanelHeading, "setPanelHeading");
   function renderBestAvailable(players, ranks) {
     const panel = document.querySelector(".selected-player-pannel");
     if (!panel) return;
@@ -12795,7 +12807,9 @@ This is the complete serialized save diff. Continue and reload the page?`
     }
     alignStripToHeading(panel, strip);
     const selected = panel.querySelector(".player-container");
-    strip.style.display = selected && !selected.classList.contains("ng-hide") ? "none" : "flex";
+    const boardVisible = !(selected && !selected.classList.contains("ng-hide"));
+    strip.style.display = boardVisible ? "flex" : "none";
+    setPanelHeading(panel, boardVisible);
     const avail = players.filter((p) => ranks.has(`avail:${rowKey(p)}`));
     const best = avail.filter((p) => ranks.has(rowKey(p))).slice().sort((a, b) => ranks.get(rowKey(a)) - ranks.get(rowKey(b))).slice(0, BEST_N);
     const byAdp = avail.filter((p) => p.adp != null).sort((a, b) => a.adp - b.adp).slice(0, BEST_N);
