@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 7a98453f0c925bf5c9aa72e5409b5e1eb09e721c
+// NFBC_SOURCE_COMMIT 3283a37ad36efb977a56045b44d202dd70c298bd
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12519,6 +12519,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     #nfbc-best .chip i{font-style:normal;border-radius:3px;padding:1px 4px}
     #nfbc-best .chip .ps{color:#777;font-weight:600}
     .nfbc-ov-banner{position:fixed;right:10px;bottom:10px;z-index:99999;background:#1f2937;color:#fff;font:13px system-ui;padding:8px 12px;border-radius:6px}
+    #playersList .table-scrollable-body tbody{overflow-y:scroll !important;overscroll-behavior-y:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
+    #playersList .table-scrollable-body tbody:focus-visible{outline:2px solid #1a6fb3;outline-offset:-2px}
   `;
     document.head.appendChild(style);
   }
@@ -13015,6 +13017,13 @@ This is the complete serialized save diff. Continue and reload the page?`
     return Array.isArray(list) ? list : [];
   }
   __name(overlayPlayersFromDocument, "overlayPlayersFromDocument");
+  function enableAvailablePlayerScrolling(root = document) {
+    const list = root.querySelector("#playersList .table-scrollable-body tbody");
+    if (!list) return;
+    if (!list.hasAttribute("tabindex")) list.tabIndex = 0;
+    if (!list.hasAttribute("aria-label")) list.setAttribute("aria-label", "Available players: scroll for more players");
+  }
+  __name(enableAvailablePlayerScrolling, "enableAvailablePlayerScrolling");
   async function mountDraftOverlay(options = {}) {
     ensureStyle();
     const settings = options.settings ?? await getSettings2();
@@ -13028,6 +13037,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const index = buildIndex(players);
     let ranks = remainingRanks(players, null);
     const run = /* @__PURE__ */ __name(() => {
+      enableAvailablePlayerScrolling();
       renderBestAvailable(players, ranks);
       document.querySelectorAll("tr.select-player").forEach((row) => annotateRow(row, index, ranks));
       document.querySelectorAll('[ng-repeat="pid in queue.draftQueue"]').forEach((item) => annotateQueueItem(item, index, ranks));
