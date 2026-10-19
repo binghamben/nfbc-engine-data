@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT ffcb2e82d5dfc3492669868cc3b07ca66dba646f
+// NFBC_SOURCE_COMMIT 7a98453f0c925bf5c9aa72e5409b5e1eb09e721c
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12427,8 +12427,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     const list = index.get(nameKey(name));
     if (!list || !list.length) return null;
     if (list.length === 1) return list[0];
-    const tokens = posText.split(/[^A-Z0-9]+/).filter(Boolean);
-    const side = tokens.length === 1 && tokens[0] === "P" ? "P" : "H";
+    const tokens = posText.toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
+    const side = tokens.length > 0 && tokens.every((t) => ["P", "SP", "RP"].includes(t)) ? "P" : "H";
     const bySide = list.filter((p) => p.s === side);
     const pool = bySide.length ? bySide : list;
     return pool.find((p) => p.t === team) ?? pool[0];
@@ -12688,9 +12688,9 @@ This is the complete serialized save diff. Continue and reload the page?`
       case "MI":
         return has.has("2B") || has.has("SS");
       case "UT":
-        return [...has].some((t) => t !== "P");
+        return [...has].some((t) => !["P", "SP", "RP"].includes(t));
       case "P":
-        return has.has("P");
+        return has.has("P") || has.has("SP") || has.has("RP");
       default:
         return true;
     }
@@ -12701,7 +12701,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const select = row.querySelector("select");
     const slot = (select?.selectedOptions[0]?.textContent ?? select?.value ?? "").replace(/^string:/, "").trim();
     if (!name) return;
-    const player = pickPlayer(index, name, "", "");
+    const player = pickPlayer(index, name, "", slot);
     const stamp = `${name}|${slot}`;
     if (row.dataset.nfbcOv === stamp) return;
     row.dataset.nfbcOv = stamp;
