@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 4ed38b05d51f1b6b9c6c6fc5d001d15d077dbccf
+// NFBC_SOURCE_COMMIT ffcb2e82d5dfc3492669868cc3b07ca66dba646f
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12570,7 +12570,9 @@ This is the complete serialized save diff. Continue and reload the page?`
       adp.className = "nfbc-c-adp";
       adp.dataset.confidence = adpConfidence(p.adpn);
       adp.textContent = p.adp.toFixed(1);
-      adp.title = `Live DC ADP \xB7 ${p.adpn ?? 0} usable draft${p.adpn === 1 ? "" : "s"} \xB7 ${adpConfidence(p.adpn)} confidence`;
+      const source = p.adps === "50" ? "12-team 50s ADP" : p.adps === "DC shadow" ? "15-team DC shadow ADP" : "15-team DC ADP";
+      const shadowNote = p.adps === "DC shadow" ? ` \xB7 50s sample ${p.adp50n ?? 0}/3` : "";
+      adp.title = `${source} \xB7 ${p.adpn ?? 0} usable draft${p.adpn === 1 ? "" : "s"}${shadowNote} \xB7 ${adpConfidence(p.adpn)} confidence`;
       el.appendChild(adp);
     } else if (aligned) hole("i", "nfbc-c-adp");
     if (aligned && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
@@ -12592,7 +12594,10 @@ This is the complete serialized save diff. Continue and reload the page?`
         `Engine outlook: ${p.eta ?? "\u2014"}`
       );
     }
-    if (p.adp != null) lines.push(`Live DC ADP ${p.adp.toFixed(1)} across ${p.adpn ?? "?"} drafts (our own count of 2027 DC drafts)`);
+    if (p.adp != null) {
+      const source = p.adps === "50" ? "12-team 50s" : p.adps === "DC shadow" ? "15-team DC shadow" : "15-team DC";
+      lines.push(`${source} ADP ${p.adp.toFixed(1)} across ${p.adpn ?? "?"} usable drafts${p.adps === "DC shadow" ? ` (50s sample ${p.adp50n ?? 0}/3)` : ""}`);
+    }
     if (p.pti) {
       lines.push(`PTI: played through a ${p.pti.toLowerCase()} injury in 2026; such hitters average about -.045 OPS vs projection the next year. Already reflected in this projection.`);
     }
@@ -12765,15 +12770,21 @@ This is the complete serialized save diff. Continue and reload the page?`
     document.body.appendChild(el);
   }
   __name(showBanner, "showBanner");
+  function detectOverlayMode(text2, configured) {
+    if (configured) return configured;
+    if (/NFBC\s*50s/i.test(text2)) return "FIFTY";
+    if (/Draft Champions/i.test(text2)) return "DC";
+    const rounds = Number(text2.match(/(\d+)-Round/)?.[1] ?? 0);
+    return rounds >= 40 ? "DC" : "ME";
+  }
+  __name(detectOverlayMode, "detectOverlayMode");
   async function detectMode(settings) {
-    if (settings.mode) return settings.mode;
+    if (settings.mode) return detectOverlayMode("", settings.mode);
     for (let i = 0; i < 40 && !/Scoring Rules/i.test(document.body.innerText); i++) {
       await new Promise((resolve) => window.setTimeout(resolve, 250));
     }
     const text2 = document.body.innerText;
-    if (/Draft Champions/i.test(text2)) return "DC";
-    const rounds = Number(text2.match(/(\d+)-Round/)?.[1] ?? 0);
-    return rounds >= 40 ? "DC" : "ME";
+    return detectOverlayMode(text2);
   }
   __name(detectMode, "detectMode");
   var BEST_N = 12;
@@ -12954,11 +12965,16 @@ This is the complete serialized save diff. Continue and reload the page?`
         c.appendChild(v);
       }
     });
-    addRow("Top ADP (ours)", byAdp, (p, c) => {
+    const adpLabel = byAdp.some((p) => p.adps === "50" || p.adps === "DC shadow") ? "Top 50s ADP" : "Top DC ADP";
+    addRow(adpLabel, byAdp, (p, c) => {
       const a = document.createElement("i");
       a.style.color = "#1e3a8a";
       a.style.background = "#e0e9ff";
       a.textContent = p.adp.toFixed(1);
+      if (p.adps === "DC shadow") {
+        a.textContent = `DC* ${a.textContent}`;
+        a.title = `DC shadow because this player's usable 50s sample is ${p.adp50n ?? 0}/3`;
+      }
       const sample = document.createElement("span");
       sample.className = "sample";
       sample.dataset.confidence = adpConfidence(p.adpn);
