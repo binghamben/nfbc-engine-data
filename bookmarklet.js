@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 3994675d03df654a7a33012e8716ef05a1b33806
+// NFBC_SOURCE_COMMIT db137aab50b34647de070c9128104d32b3017c68
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12481,16 +12481,16 @@ This is the complete serialized save diff. Continue and reload the page?`
     style.id = STYLE_ID;
     style.textContent = `
     td.nfbc-ov-cell{position:relative}
-    .nfbc-ov{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;gap:3px;align-items:center;font:600 11px/1 system-ui,sans-serif;white-space:nowrap}
+    .nfbc-ov{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;gap:3px;align-items:center;font:600 11px/1 system-ui,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
     .nfbc-ov.nfbc-ov-q{right:34px}
     .nfbc-ov.nfbc-ov-inline{position:static;transform:none;margin-left:6px;vertical-align:middle}
     .nfbc-ov-flag{margin-left:6px;font:700 10px/1 system-ui,sans-serif;color:#fff;background:#c62828;border-radius:3px;padding:2px 5px;white-space:nowrap;vertical-align:middle}
     tr.nfbc-ov-bad>td{background:#fdecea !important}
-    .nfbc-ov b{color:#fff;border-radius:3px;padding:2px 5px;font-weight:700;min-width:26px;text-align:center}
-    .nfbc-ov i{font-style:normal;color:#444;background:#eef0f3;border-radius:3px;padding:2px 5px}
-    .nfbc-ov i.nfbc-c-adp{color:#1e3a8a;background:#e0e9ff}
-    .nfbc-ov u{text-decoration:none;color:#8a3b00;background:#ffe9d5;border:1px solid #f5b98a;border-radius:3px;padding:1px 4px}
-    .nfbc-ov em{font-style:normal;color:#0b5d2b;background:#dcfce7;border:1px solid #86efac;border-radius:3px;padding:1px 4px}
+    .nfbc-ov b{box-sizing:border-box;color:#fff;border:1px solid rgba(0,0,0,.08);border-radius:4px;padding:3px 5px;font-weight:700;line-height:1;min-width:26px;text-align:center}
+    .nfbc-ov i{box-sizing:border-box;font-style:normal;color:#444;background:#eef0f3;border:1px solid rgba(0,0,0,.07);border-radius:4px;padding:3px 5px;line-height:1}
+    .nfbc-ov i.nfbc-c-adp{color:#1e3a8a;background:#e0e9ff;border-color:#b9c9ef}
+    .nfbc-ov u{text-decoration:none;color:#8a3b00;background:#ffe9d5;border:1px solid #f5b98a;border-radius:4px;padding:2px 4px}
+    .nfbc-ov em{font-style:normal;color:#0b5d2b;background:#dcfce7;border:1px solid #86efac;border-radius:4px;padding:2px 4px}
     .nfbc-ov.nfbc-ov-a b,.nfbc-ov.nfbc-ov-a i,.nfbc-ov.nfbc-ov-a em{display:inline-block;box-sizing:border-box;text-align:center;min-width:0}
     .nfbc-ov.nfbc-ov-a b{width:34px}
     .nfbc-ov.nfbc-ov-a i.nfbc-c-vor{width:28px}
@@ -12498,11 +12498,11 @@ This is the complete serialized save diff. Continue and reload the page?`
     .nfbc-ov.nfbc-ov-a em{width:42px}
     .nfbc-ov.nfbc-ov-a .nfbc-empty{visibility:hidden}
     .nfbc-ov-pos{margin-left:5px;font:600 10px/1 system-ui,sans-serif;color:#b35a00;background:#fff3e0;border-radius:3px;padding:2px 4px;white-space:nowrap;vertical-align:middle}
-    #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;padding:4px 8px;display:flex;flex-direction:column;gap:5px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff}
+    #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;box-sizing:border-box;padding:7px 8px 6px;display:flex;flex-direction:column;justify-content:center;gap:6px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff;border-top:1px solid #e5e7eb}
     #nfbc-best .nfbc-row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow:hidden;white-space:nowrap}
-    #nfbc-best .lbl{flex:0 0 92px;color:#555;font-weight:700}
-    #nfbc-best .chip{display:inline-flex;gap:4px;align-items:center;border:1px solid #d5d9e0;border-radius:4px;padding:2px 5px;background:#f8f9fb;cursor:pointer;flex:0 0 auto}
-    #nfbc-best .chip:hover{background:#e8f0fe;border-color:#9bb8f0}
+    #nfbc-best .lbl{flex:0 0 92px;color:#4b5563;font-size:10px;font-weight:750;letter-spacing:.035em;text-transform:uppercase}
+    #nfbc-best .chip{display:inline-flex;gap:4px;align-items:center;min-height:22px;box-sizing:border-box;border:1px solid #d5d9e0;border-radius:5px;padding:2px 5px;background:#f8f9fb;box-shadow:0 1px 1px rgba(15,23,42,.04);cursor:pointer;flex:0 0 auto}
+    #nfbc-best .chip:hover{background:#e8f0fe;border-color:#9bb8f0;box-shadow:0 1px 3px rgba(30,64,175,.14)}
     #nfbc-best .chip b{color:#fff;border-radius:3px;padding:1px 4px;font-weight:700}
     #nfbc-best .chip i{font-style:normal;border-radius:3px;padding:1px 4px}
     #nfbc-best .chip .ps{color:#777;font-weight:600}
@@ -12936,19 +12936,27 @@ This is the complete serialized save diff. Continue and reload the page?`
       node.id = BANNER_ID;
       node.style.cssText = [
         "position:fixed",
-        "top:0",
-        "left:0",
-        "right:0",
+        "top:12px",
+        "left:50%",
         "z-index:2147483647",
-        "padding:6px 12px",
-        "font:600 13px/1.4 system-ui,sans-serif",
+        "max-width:min(520px,calc(100vw - 24px))",
+        "box-sizing:border-box",
+        "padding:8px 14px",
+        "border:1px solid rgba(255,255,255,.24)",
+        "border-radius:999px",
+        "box-shadow:0 8px 24px rgba(15,23,42,.24)",
+        "font:650 13px/1.35 system-ui,sans-serif",
+        "letter-spacing:.01em",
         "text-align:center",
-        "color:#fff"
+        "color:#fff",
+        "transform:translateX(-50%)",
+        "white-space:normal",
+        "pointer-events:none"
       ].join(";");
       document.body.append(node);
     }
-    node.style.background = tone === "error" ? "#b91c1c" : "#1d4ed8";
-    node.textContent = message;
+    node.style.background = tone === "error" ? "#b91c1c" : "#16365c";
+    node.textContent = `${tone === "error" ? "!" : "\u2022"}  ${message}`;
   }
   __name(banner, "banner");
   function dismissBanner(afterMs) {
