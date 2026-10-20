@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 4fc4af0e5e3aed133dd3e14c099e1cd13656b8dc
+// NFBC_SOURCE_COMMIT a69877ab0080ed9470c515fbe928355e3944536b
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12506,6 +12506,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;box-sizing:border-box;padding:7px 8px 6px;display:flex;flex-direction:column;justify-content:center;gap:6px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff;border-top:1px solid #e5e7eb}
     #nfbc-best .nfbc-row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;white-space:nowrap}
     #nfbc-best .lbl{position:sticky;left:0;z-index:2;flex:0 0 92px;color:#4b5563;background:#fff;font-size:10px;font-weight:750;letter-spacing:.035em;text-transform:uppercase}
+    #nfbc-best .lbl small{display:block;margin-top:2px;color:#7b8798;font-size:8px;font-weight:650;line-height:1.1;letter-spacing:0;text-transform:none;white-space:normal}
     #nfbc-best .chip{display:inline-flex;gap:4px;align-items:center;min-height:22px;box-sizing:border-box;border:1px solid #d5d9e0;border-radius:5px;padding:2px 5px;background:#f8f9fb;box-shadow:0 1px 1px rgba(15,23,42,.04);cursor:pointer;flex:0 0 auto}
     #nfbc-best .chip:hover{background:#e8f0fe;border-color:#9bb8f0;box-shadow:0 1px 3px rgba(30,64,175,.14)}
     #nfbc-best .chip[data-market="value"]{border-color:#f0ad4e;background:#fff8e8}
@@ -12516,6 +12517,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     #nfbc-best .sample{color:#64748b;font-size:9px;font-weight:700}
     #nfbc-best .sample[data-confidence="low"]{color:#b45309;text-decoration:underline dashed;text-underline-offset:2px}
     #nfbc-best .sample[data-confidence="high"]{color:#15803d}
+    #nfbc-best .model-rank{color:#fff;background:#52667f;border-radius:3px;padding:1px 4px;font-size:9px;font-weight:750}
+    #nfbc-best .market{color:#1e3a8a;background:#e0e9ff;border-radius:3px;padding:1px 4px;font-size:9px;font-weight:750}
     #nfbc-best .more{display:inline-flex;align-items:center;min-height:22px;border:1px solid #aab4c2;border-radius:5px;padding:2px 7px;background:#fff;color:#334155;font:750 9px/1 system-ui,sans-serif;cursor:pointer;flex:0 0 auto}
     #nfbc-best .more:hover{background:#eef4fb;border-color:#6b8db8}
     #nfbc-best .legend{position:absolute;right:10px;top:-22px;color:#4b5563;font-size:9px;font-weight:650;letter-spacing:.015em;pointer-events:none}
@@ -12832,7 +12835,7 @@ This is the complete serialized save diff. Continue and reload the page?`
   }
   __name(adpConfidence, "adpConfidence");
   function adpValueGap(p) {
-    if (p.er == null || p.adp == null || (p.adpn ?? 0) < 4) return null;
+    if (p.adps === "DC shadow" || p.er == null || p.adp == null || (p.adpn ?? 0) < 4) return null;
     const gap = Math.round(p.adp - p.er);
     return gap >= Math.max(20, Math.round(p.adp * 0.2)) ? gap : null;
   }
@@ -12914,12 +12917,15 @@ This is the complete serialized save diff. Continue and reload the page?`
     legend.textContent = "MODEL \xB7 rank \xB7 VOR \xB7 ADP (n sample)";
     legend.title = "Rank is among remaining players. Value is VOR. ADP is live NFBC Draft Champions ADP. n is the usable per-player draft sample.";
     strip.appendChild(legend);
-    const addRow = /* @__PURE__ */ __name((label, list, chip) => {
+    const addRow = /* @__PURE__ */ __name((label, subtitle, list, chip) => {
       const row = document.createElement("div");
       row.className = "nfbc-row";
       const l = document.createElement("span");
       l.className = "lbl";
       l.textContent = label;
+      const sub = document.createElement("small");
+      sub.textContent = subtitle;
+      l.appendChild(sub);
       row.appendChild(l);
       const shown = expanded ? list : list.slice(0, BEST_VISIBLE_N);
       for (const p of shown) {
@@ -12978,7 +12984,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       e.textContent = shortPos(p);
       return e;
     }, "posSpan");
-    addRow("Best available", best, (p, c) => {
+    addRow("Best available", "model rank \xB7 VOR \xB7 market", best, (p, c) => {
       const rk = document.createElement("b");
       const r = ranks.get(rowKey(p));
       rk.style.background = rankColor(r);
@@ -12992,9 +12998,16 @@ This is the complete serialized save diff. Continue and reload the page?`
         v.textContent = p.vor.toFixed(1);
         c.appendChild(v);
       }
+      if (p.adp != null) {
+        const market = document.createElement("span");
+        market.className = "market";
+        market.textContent = p.adps === "DC shadow" ? `DC* ${p.adp.toFixed(1)}` : `A ${p.adp.toFixed(1)}`;
+        market.title = p.adps === "DC shadow" ? `15-team DC shadow ADP; true 50s sample ${p.adp50n ?? 0}/3` : `${p.adps === "50" ? "12-team 50s" : "15-team DC"} ADP from ${p.adpn ?? 0} usable player observations`;
+        c.appendChild(market);
+      }
     });
     const adpLabel = byAdp.some((p) => p.adps === "50" || p.adps === "DC shadow") ? "Top 50s ADP" : "Top DC ADP";
-    addRow(adpLabel, byAdp, (p, c) => {
+    addRow(adpLabel, "market order \xB7 n=player drafts", byAdp, (p, c) => {
       const a = document.createElement("i");
       a.style.color = "#1e3a8a";
       a.style.background = "#e0e9ff";
@@ -13006,9 +13019,26 @@ This is the complete serialized save diff. Continue and reload the page?`
       const sample = document.createElement("span");
       sample.className = "sample";
       sample.dataset.confidence = adpConfidence(p.adpn);
-      sample.textContent = `n${p.adpn ?? 0}`;
-      sample.title = `${p.adpn ?? 0} usable draft observations \xB7 ${adpConfidence(p.adpn)} confidence`;
+      sample.textContent = `n=${p.adpn ?? 0}`;
+      sample.title = `${p.adpn ?? 0} usable player-level draft observations \xB7 ${adpConfidence(p.adpn)} confidence`;
       c.append(a, nameSpan(p), posSpan(p), sample);
+      const remaining = ranks.get(rowKey(p));
+      if (remaining != null) {
+        const modelRank = document.createElement("span");
+        modelRank.className = "model-rank";
+        modelRank.textContent = `R#${remaining}`;
+        modelRank.title = "Model rank among players still available";
+        c.appendChild(modelRank);
+      }
+      if (p.vor != null) {
+        const value = document.createElement("i");
+        const tone = vorTone(p.vor);
+        value.style.color = tone.fg;
+        value.style.background = tone.bg;
+        value.textContent = `V ${p.vor.toFixed(1)}`;
+        value.title = "Model value over replacement";
+        c.appendChild(value);
+      }
     });
   }
   __name(renderBestAvailable, "renderBestAvailable");
