@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 3283a37ad36efb977a56045b44d202dd70c298bd
+// NFBC_SOURCE_COMMIT 60e943f98a0fa728b8ade3d2abe9114a5c41cf4a
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12482,7 +12482,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     style.textContent = `
     td.nfbc-ov-cell{position:relative}
     .nfbc-ov{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;gap:3px;align-items:center;font:600 11px/1 system-ui,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
-    .nfbc-ov.nfbc-ov-q{right:34px}
+    td.nfbc-ov-cell>.nfbc-ov{position:static;transform:none;display:flex;width:max-content;max-width:100%;margin-top:3px;flex-wrap:wrap;white-space:normal}
+    .nfbc-ov.nfbc-ov-q{position:static;transform:none;display:flex;width:max-content;max-width:100%;margin:3px 0 0;flex-wrap:wrap;white-space:normal}
     .nfbc-ov.nfbc-ov-inline{position:static;transform:none;margin-left:6px;vertical-align:middle}
     .nfbc-ov-flag{margin-left:6px;font:700 10px/1 system-ui,sans-serif;color:#fff;background:#c62828;border-radius:3px;padding:2px 5px;white-space:nowrap;vertical-align:middle}
     tr.nfbc-ov-bad>td{background:#fdecea !important}
@@ -12663,16 +12664,15 @@ This is the complete serialized save diff. Continue and reload the page?`
     item.dataset.nfbcOv = stamp;
     item.querySelectorAll(".nfbc-ov, .nfbc-ov-pos").forEach((e) => e.remove());
     if (!player) return;
-    item.classList.add("nfbc-ov-cell");
-    const b = badge2(player, rank, true, up, true);
-    b.classList.add("nfbc-ov-q");
-    item.appendChild(b);
     if (player.pos && normPos(player.pos) !== normPos(shownPos)) {
       const tag = document.createElement("span");
       tag.className = "nfbc-ov-pos";
       tag.textContent = `2027: ${player.pos.replace(/,/g, "/")}`;
       info.appendChild(tag);
     }
+    const b = badge2(player, rank, true, up, true);
+    b.classList.add("nfbc-ov-q");
+    info.appendChild(b);
   }
   __name(annotateQueueItem, "annotateQueueItem");
   function slotEligible(slot, positions) {
