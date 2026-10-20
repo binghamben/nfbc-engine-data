@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 3b23a56405ecc0fa67d6deb11177863b4c6294f8
+// NFBC_SOURCE_COMMIT 69b76982e7a172ef258d67d8a2acab32afb44fd4
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12682,7 +12682,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       tag.textContent = `2027: ${player.pos.replace(/,/g, "/")}`;
       info.appendChild(tag);
     }
-    const b = badge2(player, rank, true, up, true, false, true);
+    const b = badge2(player, rank, true, up, true, true, true);
     b.classList.add("nfbc-ov-q");
     info.appendChild(b);
   }
