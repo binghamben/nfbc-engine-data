@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 60e943f98a0fa728b8ade3d2abe9114a5c41cf4a
+// NFBC_SOURCE_COMMIT 4fc4af0e5e3aed133dd3e14c099e1cd13656b8dc
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12482,13 +12482,14 @@ This is the complete serialized save diff. Continue and reload the page?`
     style.textContent = `
     td.nfbc-ov-cell{position:relative}
     .nfbc-ov{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:inline-flex;gap:3px;align-items:center;font:600 11px/1 system-ui,sans-serif;font-variant-numeric:tabular-nums;white-space:nowrap}
-    td.nfbc-ov-cell>.nfbc-ov{position:static;transform:none;display:flex;width:max-content;max-width:100%;margin-top:3px;flex-wrap:wrap;white-space:normal}
-    .nfbc-ov.nfbc-ov-q{position:static;transform:none;display:flex;width:max-content;max-width:100%;margin:3px 0 0;flex-wrap:wrap;white-space:normal}
+    td.nfbc-ov-cell>.nfbc-ov{position:static;transform:none;display:flex;width:max-content;max-width:100%;margin-top:1px;flex-wrap:wrap;white-space:normal;background:#f5f8fc;border-left:2px solid #6b8db8;border-radius:3px;padding:1px 3px}
+    .nfbc-ov.nfbc-ov-q{position:static;transform:none;display:flex;width:max-content;max-width:100%;margin:2px 0 0;flex-wrap:wrap;white-space:normal;background:#f5f8fc;border-left:2px solid #6b8db8;border-radius:3px;padding:1px 3px}
     .nfbc-ov.nfbc-ov-inline{position:static;transform:none;margin-left:6px;vertical-align:middle}
+    .nfbc-ov .nfbc-model-label{color:#52667f;background:transparent;border:0;padding:0 2px 0 0;font-size:8px;font-weight:800;letter-spacing:.04em}
     .nfbc-ov-flag{margin-left:6px;font:700 10px/1 system-ui,sans-serif;color:#fff;background:#c62828;border-radius:3px;padding:2px 5px;white-space:nowrap;vertical-align:middle}
     tr.nfbc-ov-bad>td{background:#fdecea !important}
-    .nfbc-ov b{box-sizing:border-box;color:#fff;border:1px solid rgba(0,0,0,.08);border-radius:4px;padding:3px 5px;font-weight:700;line-height:1;min-width:26px;text-align:center}
-    .nfbc-ov i{box-sizing:border-box;font-style:normal;color:#444;background:#eef0f3;border:1px solid rgba(0,0,0,.07);border-radius:4px;padding:3px 5px;line-height:1}
+    .nfbc-ov b{box-sizing:border-box;color:#fff;border:1px solid rgba(0,0,0,.08);border-radius:4px;padding:2px 4px;font-weight:700;line-height:1;min-width:26px;text-align:center}
+    .nfbc-ov i{box-sizing:border-box;font-style:normal;color:#444;background:#eef0f3;border:1px solid rgba(0,0,0,.07);border-radius:4px;padding:2px 4px;line-height:1}
     .nfbc-ov i.nfbc-c-adp{color:#1e3a8a;background:#e0e9ff;border-color:#b9c9ef}
     .nfbc-ov i.nfbc-c-adp[data-confidence="low"]{border-style:dashed;color:#64748b;background:#f1f5f9}
     .nfbc-ov i.nfbc-c-adp[data-confidence="medium"]{border-color:#93a8d8}
@@ -12496,10 +12497,10 @@ This is the complete serialized save diff. Continue and reload the page?`
     .nfbc-ov u{text-decoration:none;color:#8a3b00;background:#ffe9d5;border:1px solid #f5b98a;border-radius:4px;padding:2px 4px}
     .nfbc-ov em{font-style:normal;color:#0b5d2b;background:#dcfce7;border:1px solid #86efac;border-radius:4px;padding:2px 4px}
     .nfbc-ov.nfbc-ov-a b,.nfbc-ov.nfbc-ov-a i,.nfbc-ov.nfbc-ov-a em{display:inline-block;box-sizing:border-box;text-align:center;min-width:0}
-    .nfbc-ov.nfbc-ov-a b{width:34px}
-    .nfbc-ov.nfbc-ov-a i.nfbc-c-vor{width:28px}
-    .nfbc-ov.nfbc-ov-a i.nfbc-c-adp{width:42px}
-    .nfbc-ov.nfbc-ov-a em{width:42px}
+    .nfbc-ov.nfbc-ov-a b{min-width:42px}
+    .nfbc-ov.nfbc-ov-a i.nfbc-c-vor{min-width:42px}
+    .nfbc-ov.nfbc-ov-a i.nfbc-c-adp{min-width:64px}
+    .nfbc-ov.nfbc-ov-a em{min-width:42px}
     .nfbc-ov.nfbc-ov-a .nfbc-empty{visibility:hidden}
     .nfbc-ov-pos{margin-left:5px;font:600 10px/1 system-ui,sans-serif;color:#b35a00;background:#fff3e0;border-radius:3px;padding:2px 4px;white-space:nowrap;vertical-align:middle}
     #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;box-sizing:border-box;padding:7px 8px 6px;display:flex;flex-direction:column;justify-content:center;gap:6px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff;border-top:1px solid #e5e7eb}
@@ -12515,6 +12516,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     #nfbc-best .sample{color:#64748b;font-size:9px;font-weight:700}
     #nfbc-best .sample[data-confidence="low"]{color:#b45309;text-decoration:underline dashed;text-underline-offset:2px}
     #nfbc-best .sample[data-confidence="high"]{color:#15803d}
+    #nfbc-best .more{display:inline-flex;align-items:center;min-height:22px;border:1px solid #aab4c2;border-radius:5px;padding:2px 7px;background:#fff;color:#334155;font:750 9px/1 system-ui,sans-serif;cursor:pointer;flex:0 0 auto}
+    #nfbc-best .more:hover{background:#eef4fb;border-color:#6b8db8}
     #nfbc-best .legend{position:absolute;right:10px;top:-22px;color:#4b5563;font-size:9px;font-weight:650;letter-spacing:.015em;pointer-events:none}
     #nfbc-best .chip b{color:#fff;border-radius:3px;padding:1px 4px;font-weight:700}
     #nfbc-best .chip i{font-style:normal;border-radius:3px;padding:1px 4px}
@@ -12534,10 +12537,16 @@ This is the complete serialized save diff. Continue and reload the page?`
     return { fg: "#991b1b", bg: "#fee2e2" };
   }
   __name(vorTone, "vorTone");
-  function badge2(p, rank, showRank = true, upRank = null, compact = false) {
+  function badge2(p, rank, showRank = true, upRank = null, compact = false, includeAdp = true, modelLabel = false) {
     const el = document.createElement("span");
     el.className = showRank && !compact ? "nfbc-ov nfbc-ov-a" : "nfbc-ov";
     const aligned = showRank && !compact;
+    if (modelLabel) {
+      const label = document.createElement("span");
+      label.className = "nfbc-model-label";
+      label.textContent = "MODEL";
+      el.appendChild(label);
+    }
     const hole = /* @__PURE__ */ __name((tag, cls = "") => {
       const e = document.createElement(tag);
       e.className = `${cls} nfbc-empty`.trim();
@@ -12547,7 +12556,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     if (showRank) {
       const rk = document.createElement("b");
       rk.style.background = rankColor(rank);
-      rk.textContent = rank != null ? `#${rank}` : p.fv != null ? `FV${p.fv}` : "\u2014";
+      rk.textContent = rank != null ? `R#${rank}` : p.fv != null ? `FV${p.fv}` : "R\u2014";
       if (rank == null && p.fv != null) rk.style.background = "#7c6f9b";
       el.appendChild(rk);
     }
@@ -12555,29 +12564,29 @@ This is the complete serialized save diff. Continue and reload the page?`
     if (shown == null && p.pv != null && showRank) {
       const pv = document.createElement("i");
       pv.className = "nfbc-c-vor";
-      pv.textContent = p.pv.toFixed(1);
+      pv.textContent = `V ${p.pv.toFixed(1)}`;
       pv.style.color = "#4c3b7a";
       pv.style.background = "#e9e2f7";
       el.appendChild(pv);
     } else if (shown != null) {
       const sgp = document.createElement("i");
       sgp.className = "nfbc-c-vor";
-      sgp.textContent = shown.toFixed(1);
+      sgp.textContent = `V ${shown.toFixed(1)}`;
       const tone = vorTone(shown);
       sgp.style.color = tone.fg;
       sgp.style.background = tone.bg;
       el.appendChild(sgp);
     } else if (aligned) hole("i", "nfbc-c-vor");
-    if (showRank && p.adp != null) {
+    if (showRank && includeAdp && p.adp != null) {
       const adp = document.createElement("i");
       adp.className = "nfbc-c-adp";
       adp.dataset.confidence = adpConfidence(p.adpn);
-      adp.textContent = p.adp.toFixed(1);
+      adp.textContent = `ADP ${p.adp.toFixed(1)}${p.adpn != null ? ` (n${p.adpn})` : ""}`;
       const source = p.adps === "50" ? "12-team 50s ADP" : p.adps === "DC shadow" ? "15-team DC shadow ADP" : "15-team DC ADP";
       const shadowNote = p.adps === "DC shadow" ? ` \xB7 50s sample ${p.adp50n ?? 0}/3` : "";
       adp.title = `${source} \xB7 ${p.adpn ?? 0} usable draft${p.adpn === 1 ? "" : "s"}${shadowNote} \xB7 ${adpConfidence(p.adpn)} confidence`;
       el.appendChild(adp);
-    } else if (aligned) hole("i", "nfbc-c-adp");
+    } else if (aligned && includeAdp) hole("i", "nfbc-c-adp");
     if (aligned && upRank != null && rank != null && rank - upRank >= UPSIDE_MIN_GAP) {
       const up = document.createElement("em");
       up.textContent = `Up ${upRank}`;
@@ -12637,7 +12646,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const cell = nameEl.closest("td");
     if (cell) {
       cell.classList.add("nfbc-ov-cell");
-      cell.appendChild(badge2(player, rank, true, up));
+      cell.appendChild(badge2(player, rank, true, up, false, true, true));
     }
     if (posEl && player.pos && normPos(player.pos) !== normPos(shownPos)) {
       const tag = document.createElement("span");
@@ -12670,7 +12679,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       tag.textContent = `2027: ${player.pos.replace(/,/g, "/")}`;
       info.appendChild(tag);
     }
-    const b = badge2(player, rank, true, up, true);
+    const b = badge2(player, rank, true, up, true, false, true);
     b.classList.add("nfbc-ov-q");
     info.appendChild(b);
   }
@@ -12790,6 +12799,7 @@ This is the complete serialized save diff. Continue and reload the page?`
   }
   __name(detectMode, "detectMode");
   var BEST_N = 12;
+  var BEST_VISIBLE_N = 5;
   function shortPos(p) {
     if (p.s === "P") return "P";
     const parts = (p.pos || "").split(",").filter((x) => x && x !== "UT");
@@ -12889,17 +12899,19 @@ This is the complete serialized save diff. Continue and reload the page?`
     const byAdp = avail.filter((p) => p.adp != null).sort((a, b) => a.adp - b.adp).slice(0, BEST_N);
     const openSlots = openRosterSlots();
     const queued = queuedPlayerNames();
+    const expanded = strip.dataset.expanded === "true";
     const stamp = [
       ...[...best, ...byAdp].map((p) => `${rowKey(p)}:${ranks.get(rowKey(p))}`),
       `open:${openSlots.sort().join("/")}`,
-      `queue:${[...queued].sort().join("/")}`
+      `queue:${[...queued].sort().join("/")}`,
+      `expanded:${expanded}`
     ].join(",");
     if (strip.dataset.stamp === stamp) return;
     strip.dataset.stamp = stamp;
     strip.textContent = "";
     const legend = document.createElement("span");
     legend.className = "legend";
-    legend.textContent = "# rank \xB7 green value/VOR \xB7 blue ADP \xB7 n sample";
+    legend.textContent = "MODEL \xB7 rank \xB7 VOR \xB7 ADP (n sample)";
     legend.title = "Rank is among remaining players. Value is VOR. ADP is live NFBC Draft Champions ADP. n is the usable per-player draft sample.";
     strip.appendChild(legend);
     const addRow = /* @__PURE__ */ __name((label, list, chip) => {
@@ -12909,7 +12921,8 @@ This is the complete serialized save diff. Continue and reload the page?`
       l.className = "lbl";
       l.textContent = label;
       row.appendChild(l);
-      for (const p of list) {
+      const shown = expanded ? list : list.slice(0, BEST_VISIBLE_N);
+      for (const p of shown) {
         const c = document.createElement("span");
         c.className = "chip";
         c.title = `${p.n} (${p.t}) \u2014 click to find in the list`;
@@ -12933,11 +12946,24 @@ This is the complete serialized save diff. Continue and reload the page?`
         if (gap != null) {
           const edge = document.createElement("span");
           edge.className = "edge";
-          edge.textContent = `+${gap}`;
+          edge.textContent = `ADP gap +${gap}`;
           c.appendChild(edge);
         }
         c.addEventListener("click", () => findPlayer(p.n ?? ""));
         row.appendChild(c);
+      }
+      if (list.length > BEST_VISIBLE_N) {
+        const more = document.createElement("button");
+        more.type = "button";
+        more.className = "more";
+        more.textContent = expanded ? "Less" : `More ${list.length - BEST_VISIBLE_N}`;
+        more.title = expanded ? "Show the compact five-player view" : `Show ${list.length - BEST_VISIBLE_N} more players`;
+        more.addEventListener("click", () => {
+          strip.dataset.expanded = expanded ? "false" : "true";
+          delete strip.dataset.stamp;
+          renderBestAvailable(players, ranks);
+        });
+        row.appendChild(more);
       }
       strip.appendChild(row);
     }, "addRow");
