@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT a69877ab0080ed9470c515fbe928355e3944536b
+// NFBC_SOURCE_COMMIT 3b23a56405ecc0fa67d6deb11177863b4c6294f8
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12716,7 +12716,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const slot = (select?.selectedOptions[0]?.textContent ?? select?.value ?? "").replace(/^string:/, "").trim();
     if (!name) return;
     const player = pickPlayer(index, name, "", slot);
-    const stamp = `${name}|${slot}`;
+    const stamp = `${name}|${slot}|${player?.pos ?? ""}`;
     if (row.dataset.nfbcOv === stamp) return;
     row.dataset.nfbcOv = stamp;
     row.querySelectorAll(".nfbc-ov, .nfbc-ov-pos, .nfbc-ov-flag").forEach((e) => e.remove());
@@ -12726,6 +12726,13 @@ This is the complete serialized save diff. Continue and reload the page?`
     const b = badge2(player, null, false);
     b.classList.add("nfbc-ov-inline");
     if (player.sgp != null) host.appendChild(b);
+    if (player.s === "P" && player.pos) {
+      const role = document.createElement("span");
+      role.className = "nfbc-ov-pos";
+      role.textContent = player.pos.replace(/,/g, "/");
+      role.title = "2027 projected pitcher role";
+      host.appendChild(role);
+    }
     if (slot && !slotEligible(slot, player.pos)) {
       const flag = document.createElement("span");
       flag.className = "nfbc-ov-flag";
@@ -12804,7 +12811,7 @@ This is the complete serialized save diff. Continue and reload the page?`
   var BEST_N = 12;
   var BEST_VISIBLE_N = 5;
   function shortPos(p) {
-    if (p.s === "P") return "P";
+    if (p.s === "P") return (p.pos || "P").replace(/,/g, "/");
     const parts = (p.pos || "").split(",").filter((x) => x && x !== "UT");
     return parts.length ? parts.join("/") : "UT";
   }
