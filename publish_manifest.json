@@ -4,14 +4,14 @@
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
     "bookmarklet.js": "033b1767964693682cdf9ec46e949e863e338f741f8dc9695079951f9d4c7257",
-    "draft2027.json": "fa743aaf6fc1e4be3894cfc5ee74570a861d31423aa005701e810fc23b35a636",
+    "draft2027.json": "b6bb34264753cb60b3bc95af7a3d1a51f4ff56abac35159e03a6dd3da4dd2e6d",
     "draft_overlay.json": "1cb0c2eaf1b207cc85ec98ec02db9b163a893af790648839f21e3118b0e8c9ec",
     "faab.json": "cf7fd7d04006729f8a0831ab0628e457f2f57816b78790e7d1ac9e9071ac2753",
     "l30.json": "c873873695fefe0ab5a326dc9ffd0790f8ff9bd4a71da92965b0443912aca3c4",
     "projections.json": "51c9dbc7d43d6e6ff958fed677ba4bc31ac91a16a359811a0ecd32979d80e79d",
     "projections_next.json": "e339bd07c073610282190bb4231f2c186813387be9da6bacddba351b2ec70284",
-    "prospect_movement.json": "59640c30bac901c3f57190c2963122963df77685408d31b2b6accdb0f3b9a9d5",
-    "prospects.json": "25defe1dddbc7daca6d641cf4388f80481a4e63796dbce1dcc8f5ec5cfcbbf15",
+    "prospect_movement.json": "5077fcae1b07c3743035a8902f022fe2bb54cc71a05e2ee31ec3abd91b3b53a9",
+    "prospects.json": "8a803cd0124c80f4b83a94fafab02d53445571a8a2d5af3694e627a7019daf11",
     "README.md": "2c3a2e79a81ab5ad3f62fc1984ab66273a3c406ebf4ab746d59adb4733607ed9",
     "skills.json": "f6e0f56070edcc54230d4b712f69439655fc6780618ff8dcf308a134d60cc4f7"
   },
@@ -21,5 +21,5 @@
     "working_tree_changes": false,
     "sha256": "033b1767964693682cdf9ec46e949e863e338f741f8dc9695079951f9d4c7257"
   },
-  "published_at": "2026-10-21T11:38:37.147684+00:00"
+  "published_at": "2026-10-21T11:41:27.781528+00:00"
 }
