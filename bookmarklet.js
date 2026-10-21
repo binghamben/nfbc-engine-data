@@ -12426,12 +12426,15 @@ This is the complete serialized save diff. Continue and reload the page?`
   function pickPlayer(index, name, team, posText) {
     const list = index.get(nameKey(name));
     if (!list || !list.length) return null;
-    if (list.length === 1) return list[0];
-    const tokens = posText.toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
-    const side = tokens.length > 0 && tokens.every((t) => ["P", "SP", "RP"].includes(t)) ? "P" : "H";
-    const bySide = list.filter((p) => p.s === side);
-    const pool = bySide.length ? bySide : list;
-    return pool.find((p) => p.t === team) ?? pool[0];
+    const tokens = posText.toUpperCase().split(/[^A-Z0-9]+/).filter((t) => ["P", "SP", "RP", "C", "1B", "2B", "3B", "SS", "OF", "LF", "CF", "RF", "DH", "UT", "CI", "MI"].includes(t));
+    const side = tokens.length ? tokens.every((t) => ["P", "SP", "RP"].includes(t)) ? "P" : "H" : null;
+    const pool = side ? list.filter((p) => p.s === side) : list;
+    if (!pool.length) return null;
+    const exactTeam = team ? pool.filter((p) => p.t === team) : [];
+    if (exactTeam.length === 1) return exactTeam[0];
+    if (exactTeam.length > 1) return null;
+    const compatible = team ? pool.filter((p) => !p.t || p.t === "FA" || p.t === "NONE") : pool;
+    return compatible.length === 1 ? compatible[0] : null;
   }
   __name(pickPlayer, "pickPlayer");
   function rowKey(p) {
@@ -12644,7 +12647,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const player = pickPlayer(index, name, team, posEl?.textContent ?? "");
     const rank = player ? ranks.get(rowKey(player)) ?? null : null;
     const up = player ? ranks.get(`up:${rowKey(player)}`) ?? null : null;
-    const stamp = `${name}|${team}|${rank}|${up}`;
+    const stamp = `${name}|${team}|${shownPos}|${rank}|${up}`;
     if (row.dataset.nfbcOv === stamp) return;
     row.dataset.nfbcOv = stamp;
     row.querySelectorAll(".nfbc-ov, .nfbc-ov-pos").forEach((e) => e.remove());
@@ -12674,7 +12677,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const player = pickPlayer(index, name, team, shownPos.replace(/\//g, " "));
     const rank = player ? ranks.get(rowKey(player)) ?? null : null;
     const up = player ? ranks.get(`up:${rowKey(player)}`) ?? null : null;
-    const stamp = `${name}|${team}|${rank}|${up}`;
+    const stamp = `${name}|${team}|${shownPos}|${rank}|${up}`;
     if (item.dataset.nfbcOv === stamp) return;
     item.dataset.nfbcOv = stamp;
     item.querySelectorAll(".nfbc-ov, .nfbc-ov-pos").forEach((e) => e.remove());
@@ -12757,7 +12760,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const player = pickPlayer(index, name, team, shownPos.replace(/\//g, " "));
     const rank = player ? ranks.get(rowKey(player)) ?? null : null;
     const up = player ? ranks.get(`up:${rowKey(player)}`) ?? null : null;
-    const stamp = `${name}|${team}|${rank}|${up}`;
+    const stamp = `${name}|${team}|${shownPos}|${rank}|${up}`;
     if (box.dataset.nfbcOv === stamp) return;
     box.dataset.nfbcOv = stamp;
     box.querySelectorAll(".nfbc-ov, .nfbc-ov-pos").forEach((e) => e.remove());
