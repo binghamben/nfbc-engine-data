@@ -3,7 +3,7 @@
     ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
-    "bookmarklet.js": "941f6251d905a2679f4fda4f855897b12b042b48aa851e774de0ea506c68e948",
+    "bookmarklet.js": "9394b613b8d3681ce61d73a53a9215f74bef0fbed4ca8a0509134dde155e25ae",
     "draft2027.json": "b6bb34264753cb60b3bc95af7a3d1a51f4ff56abac35159e03a6dd3da4dd2e6d",
     "draft_overlay.json": "c7b011305036fa89e54e347c902c3622517593971328a78c3505fa673c5b77dd",
     "faab.json": "cf7fd7d04006729f8a0831ab0628e457f2f57816b78790e7d1ac9e9071ac2753",
@@ -17,9 +17,9 @@
   },
   "generated_at": "2026-10-21 11:26:30.963637+00:00",
   "client": {
-    "source_head": "52239231ec7fe6e61afd24a74ac59fe08056d80f",
+    "source_head": "b28eccb4adc819af55d0adcd402e9f6f645fd273",
     "working_tree_changes": false,
-    "sha256": "941f6251d905a2679f4fda4f855897b12b042b48aa851e774de0ea506c68e948"
+    "sha256": "9394b613b8d3681ce61d73a53a9215f74bef0fbed4ca8a0509134dde155e25ae"
   },
-  "published_at": "2026-10-21T13:39:44.666081+00:00"
+  "published_at": "2026-10-21T13:45:11.305406+00:00"
 }
