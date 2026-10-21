@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT b28eccb4adc819af55d0adcd402e9f6f645fd273
+// NFBC_SOURCE_COMMIT 2277899b4f68090365d995fd278d7b76cfc32256
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12430,7 +12430,8 @@ This is the complete serialized save diff. Continue and reload the page?`
     const side = tokens.length ? tokens.every((t) => ["P", "SP", "RP"].includes(t)) ? "P" : "H" : null;
     const pool = side ? list.filter((p) => p.s === side) : list;
     if (!pool.length) return null;
-    const exactTeam = team ? pool.filter((p) => p.t === team) : [];
+    const canonicalTeam = normalizeTeam(team);
+    const exactTeam = canonicalTeam ? pool.filter((p) => normalizeTeam(p.t) === canonicalTeam) : [];
     if (exactTeam.length === 1) return exactTeam[0];
     if (exactTeam.length > 1) return null;
     const compatible = team ? pool.filter((p) => !p.t || p.t === "FA" || p.t === "NONE") : pool;
