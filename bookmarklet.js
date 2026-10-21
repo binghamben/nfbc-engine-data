@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 69b76982e7a172ef258d67d8a2acab32afb44fd4
+// NFBC_SOURCE_COMMIT 52239231ec7fe6e61afd24a74ac59fe08056d80f
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12503,9 +12503,12 @@ This is the complete serialized save diff. Continue and reload the page?`
     .nfbc-ov.nfbc-ov-a em{min-width:42px}
     .nfbc-ov.nfbc-ov-a .nfbc-empty{visibility:hidden}
     .nfbc-ov-pos{margin-left:5px;font:600 10px/1 system-ui,sans-serif;color:#b35a00;background:#fff3e0;border-radius:3px;padding:2px 4px;white-space:nowrap;vertical-align:middle}
-    #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;box-sizing:border-box;padding:7px 8px 6px;display:flex;flex-direction:column;justify-content:center;gap:6px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff;border-top:1px solid #e5e7eb}
+    #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;box-sizing:border-box;padding:7px 8px 6px;display:flex;flex-direction:column;justify-content:center;gap:3px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff;border-top:1px solid #e5e7eb}
     #nfbc-best .nfbc-row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;white-space:nowrap}
-    #nfbc-best .lbl{position:sticky;left:0;z-index:2;flex:0 0 92px;color:#4b5563;background:#fff;font-size:10px;font-weight:750;letter-spacing:.035em;text-transform:uppercase}
+    #nfbc-best .lbl{position:sticky;left:0;z-index:2;flex:0 0 80px;color:#4b5563;background:#fff;font-size:10px;font-weight:750;letter-spacing:.035em;text-transform:uppercase}
+    #nfbc-best .nfbc-row{flex-shrink:0;min-height:22px}
+    #nfbc-best .target-status{color:#64748b;font-size:10px}
+    #nfbc-best .target-connect{color:#1d4ed8;border:0;background:none;cursor:pointer;font:inherit;padding:0}
     #nfbc-best .lbl small{display:block;margin-top:2px;color:#7b8798;font-size:8px;font-weight:650;line-height:1.1;letter-spacing:0;text-transform:none;white-space:normal}
     #nfbc-best .chip{display:inline-flex;gap:4px;align-items:center;min-height:22px;box-sizing:border-box;border:1px solid #d5d9e0;border-radius:5px;padding:2px 5px;background:#f8f9fb;box-shadow:0 1px 1px rgba(15,23,42,.04);cursor:pointer;flex:0 0 auto}
     #nfbc-best .chip:hover{background:#e8f0fe;border-color:#9bb8f0;box-shadow:0 1px 3px rgba(30,64,175,.14)}
@@ -12889,7 +12892,26 @@ This is the complete serialized save diff. Continue and reload the page?`
     return queued;
   }
   __name(queuedPlayerNames, "queuedPlayerNames");
-  function renderBestAvailable(players, ranks) {
+  function parseTargetConnection(value) {
+    const raw = value.trim();
+    if (!raw.startsWith("{")) return { token: raw };
+    const parsed = JSON.parse(raw);
+    if (!parsed.token || typeof parsed.token !== "string") throw new Error("Connection code needs a token");
+    const url = new URL(parsed.base || "https://nfbcmanager.com");
+    if (url.origin !== "https://nfbcmanager.com") throw new Error("Use the connection code from Draft_Room");
+    return {
+      token: parsed.token.trim(),
+      base: url.origin,
+      ...Number.isInteger(parsed.profile_id) && parsed.profile_id > 0 ? { profile_id: parsed.profile_id } : {}
+    };
+  }
+  __name(parseTargetConnection, "parseTargetConnection");
+  function availableTargets(players, ranks) {
+    const price = /* @__PURE__ */ __name((p) => Number.isFinite(p.adp) && (p.adp ?? 0) > 0 ? p.adp : Infinity, "price");
+    return players.filter((p) => p.mt === 1 && ranks.has(`avail:${rowKey(p)}`)).sort((a, b) => price(a) - price(b) || rowKey(a).localeCompare(rowKey(b)));
+  }
+  __name(availableTargets, "availableTargets");
+  function renderBestAvailable(players, ranks, targets = {}) {
     const panel = document.querySelector(".selected-player-pannel");
     if (!panel) return;
     let strip = panel.querySelector("#nfbc-best");
@@ -12903,18 +12925,21 @@ This is the complete serialized save diff. Continue and reload the page?`
     const selected = panel.querySelector(".player-container");
     const boardVisible = !(selected && !selected.classList.contains("ng-hide"));
     strip.style.display = boardVisible ? "flex" : "none";
+    if (boardVisible) panel.style.minHeight = "124px";
     setPanelHeading(panel, boardVisible);
     const avail = players.filter((p) => ranks.has(`avail:${rowKey(p)}`));
     const best = avail.filter((p) => ranks.has(rowKey(p))).slice().sort((a, b) => ranks.get(rowKey(a)) - ranks.get(rowKey(b))).slice(0, BEST_N);
     const byAdp = avail.filter((p) => p.adp != null).sort((a, b) => a.adp - b.adp).slice(0, BEST_N);
+    const myTargets = targets.poolReady === false ? [] : availableTargets(players, ranks);
     const openSlots = openRosterSlots();
     const queued = queuedPlayerNames();
     const expanded = strip.dataset.expanded === "true";
     const stamp = [
-      ...[...best, ...byAdp].map((p) => `${rowKey(p)}:${ranks.get(rowKey(p))}`),
+      ...[...best, ...byAdp, ...myTargets].map((p) => `${rowKey(p)}:${ranks.get(rowKey(p))}:${p.adp}:${p.adpn}:${p.adps}:${p.vor}`),
       `open:${openSlots.sort().join("/")}`,
       `queue:${[...queued].sort().join("/")}`,
-      `expanded:${expanded}`
+      `expanded:${expanded}`,
+      `targets:${targets.ready}:${targets.error}:${targets.poolReady}`
     ].join(",");
     if (strip.dataset.stamp === stamp) return;
     strip.dataset.stamp = stamp;
@@ -12974,7 +12999,7 @@ This is the complete serialized save diff. Continue and reload the page?`
         more.addEventListener("click", () => {
           strip.dataset.expanded = expanded ? "false" : "true";
           delete strip.dataset.stamp;
-          renderBestAvailable(players, ranks);
+          renderBestAvailable(players, ranks, targets);
         });
         row.appendChild(more);
       }
@@ -12991,7 +13016,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       e.textContent = shortPos(p);
       return e;
     }, "posSpan");
-    addRow("Best available", "model rank \xB7 VOR \xB7 market", best, (p, c) => {
+    addRow("Best", "rank \xB7 value", best, (p, c) => {
       const rk = document.createElement("b");
       const r = ranks.get(rowKey(p));
       rk.style.background = rankColor(r);
@@ -13013,8 +13038,8 @@ This is the complete serialized save diff. Continue and reload the page?`
         c.appendChild(market);
       }
     });
-    const adpLabel = byAdp.some((p) => p.adps === "50" || p.adps === "DC shadow") ? "Top 50s ADP" : "Top DC ADP";
-    addRow(adpLabel, "market order \xB7 n=player drafts", byAdp, (p, c) => {
+    const adpLabel = "ADP";
+    addRow(adpLabel, "market order", byAdp, (p, c) => {
       const a = document.createElement("i");
       a.style.color = "#1e3a8a";
       a.style.background = "#e0e9ff";
@@ -13047,6 +13072,24 @@ This is the complete serialized save diff. Continue and reload the page?`
         c.appendChild(value);
       }
     });
+    addRow("My Targets", "ADP order", myTargets, (p, c) => {
+      const a = document.createElement("span");
+      a.className = "market";
+      a.textContent = p.adp != null && Number.isFinite(p.adp) && p.adp > 0 ? `${p.adps === "DC shadow" ? "DC* " : ""}${p.adp.toFixed(1)}` : "ADP \u2014";
+      a.title = p.adps === "DC shadow" ? `DC shadow; true 50s sample ${p.adp50n ?? 0}/3` : `${p.adps === "50" ? "50s" : "DC"} ADP`;
+      c.append(a, nameSpan(p), posSpan(p));
+    });
+    if (!myTargets.length) {
+      const row = strip.lastElementChild;
+      const status = document.createElement(targets.ready ? "span" : "button");
+      status.className = targets.ready ? "target-status" : "target-connect";
+      status.textContent = targets.ready ? targets.poolReady === false ? "Checking available players\u2026" : "No available targets" : targets.error ? "Targets unavailable \xB7 reconnect" : "Connect targets";
+      if (!targets.ready) {
+        status.type = "button";
+        status.addEventListener("click", () => targets.connect?.());
+      }
+      row.appendChild(status);
+    }
   }
   __name(renderBestAvailable, "renderBestAvailable");
   function findPlayer(name) {
@@ -13091,17 +13134,19 @@ This is the complete serialized save diff. Continue and reload the page?`
     ensureStyle();
     const settings = options.settings ?? await getSettings2();
     const mode = await detectMode(settings);
-    const resp = await (options.load ? options.load(mode) : sendFetch(mode));
+    const load = /* @__PURE__ */ __name(() => options.load ? options.load(mode) : sendFetch(mode), "load");
+    const resp = await load();
     if (!resp.ok || !resp.players) {
       showBanner(`Rank overlay unavailable: ${resp.error ?? "no data"}`);
       return;
     }
-    const players = resp.players;
-    const index = buildIndex(players);
+    let players = resp.players;
+    let index = buildIndex(players);
+    const targets = { ready: resp.targetsReady, error: resp.targetsError, poolReady: false };
     let ranks = remainingRanks(players, null);
     const run = /* @__PURE__ */ __name(() => {
       enableAvailablePlayerScrolling();
-      renderBestAvailable(players, ranks);
+      renderBestAvailable(players, ranks, targets);
       document.querySelectorAll("tr.select-player").forEach((row) => annotateRow(row, index, ranks));
       document.querySelectorAll('[ng-repeat="pid in queue.draftQueue"]').forEach((item) => annotateQueueItem(item, index, ranks));
       document.querySelectorAll('[ng-repeat="player in dr.thisRoster"]').forEach((row) => annotateRosterRow(row, index));
@@ -13110,10 +13155,75 @@ This is the complete serialized save diff. Continue and reload the page?`
     const refreshPool = /* @__PURE__ */ __name(async () => {
       const pool = await fetchPool();
       if (pool) {
+        targets.poolReady = true;
         ranks = remainingRanks(players, pool);
         run();
       }
     }, "refreshPool");
+    let feedLoading = false;
+    const refreshFeed = /* @__PURE__ */ __name(async () => {
+      if (feedLoading) return;
+      feedLoading = true;
+      try {
+        const next = await load();
+        if (next.ok && next.players) {
+          players = next.players;
+          index = buildIndex(players);
+          targets.ready = next.targetsReady;
+          targets.error = next.targetsError;
+          await refreshPool();
+          run();
+        }
+      } catch {
+        targets.error = true;
+        run();
+      } finally {
+        feedLoading = false;
+      }
+    }, "refreshFeed");
+    targets.connect = () => {
+      if (document.getElementById("nfbc-target-connect")) return;
+      const form = document.createElement("form");
+      form.id = "nfbc-target-connect";
+      form.style.cssText = "position:fixed;z-index:2147483647;top:20%;left:50%;transform:translateX(-50%);width:min(340px,90vw);padding:16px;background:white;color:#172033;border:1px solid #94a3b8;border-radius:8px;box-shadow:0 6px 30px #0005;font:13px system-ui";
+      const label = document.createElement("label");
+      label.textContent = "My Targets \xB7 paste the connection code from Draft_Room";
+      const input = document.createElement("input");
+      input.type = "password";
+      input.autocomplete = "off";
+      input.required = true;
+      input.style.cssText = "display:block;width:100%;box-sizing:border-box;margin:12px 0;padding:8px";
+      input.setAttribute("aria-label", "Private Draft_Room connection code");
+      input.addEventListener("input", () => input.setCustomValidity(""));
+      const save = document.createElement("button");
+      save.type = "submit";
+      save.textContent = "Connect";
+      const cancel = document.createElement("button");
+      cancel.type = "button";
+      cancel.textContent = "Cancel";
+      cancel.addEventListener("click", () => form.remove());
+      label.appendChild(input);
+      form.append(label, save, cancel);
+      document.body.appendChild(form);
+      input.focus();
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        try {
+          Object.assign(settings, parseTargetConnection(input.value));
+        } catch (error) {
+          input.setCustomValidity(error instanceof Error ? error.message : "Invalid connection code");
+          input.reportValidity();
+          return;
+        }
+        if (!settings.token) return;
+        input.value = "";
+        form.remove();
+        void (options.saveSettings ? options.saveSettings(settings) : chrome.storage.local.set({ [DRAFT_OVERLAY_SETTINGS_KEY]: settings })).then(refreshFeed).catch(() => {
+          targets.error = true;
+          run();
+        });
+      });
+    };
     let timer;
     new MutationObserver(() => {
       window.clearTimeout(timer);
@@ -13122,6 +13232,9 @@ This is the complete serialized save diff. Continue and reload the page?`
     await refreshPool();
     run();
     window.setInterval(() => void refreshPool(), POOL_REFRESH_MS);
+    window.setInterval(() => {
+      if (settings.token) void refreshFeed();
+    }, 3e4);
   }
   __name(mountDraftOverlay, "mountDraftOverlay");
 
@@ -13206,13 +13319,39 @@ This is the complete serialized save diff. Continue and reload the page?`
       return;
     }
     banner("NFBC: loading draft rankings\u2026");
+    let settings = {};
+    try {
+      settings = JSON.parse(localStorage.getItem(DRAFT_OVERLAY_SETTINGS_KEY) || "{}");
+    } catch {
+    }
     await mountDraftOverlay({
-      settings: {},
+      settings,
+      saveSettings: /* @__PURE__ */ __name(async (next) => {
+        settings = next;
+        localStorage.setItem(DRAFT_OVERLAY_SETTINGS_KEY, JSON.stringify(next));
+      }, "saveSettings"),
       load: /* @__PURE__ */ __name(async (mode) => {
+        let targetsError = false;
+        if (settings.token) {
+          try {
+            const base = (settings.base || "https://nfbcmanager.com").replace(/\/$/, "");
+            const privateResponse = await fetch(`${base}/overlay/draft?mode=${encodeURIComponent(mode)}${settings.profile_id ? `&profile_id=${settings.profile_id}` : ""}`, {
+              headers: { "X-Overlay-Token": settings.token },
+              cache: "no-store",
+              credentials: "omit"
+            });
+            if (!privateResponse.ok) throw new Error("Private targets unavailable");
+            const payload = await privateResponse.json();
+            if (!Array.isArray(payload.players)) throw new Error("Invalid target feed");
+            return { ok: true, players: payload.players, targetsReady: payload.targets_ready === true };
+          } catch {
+            targetsError = true;
+          }
+        }
         const response = await fetch(`${GITHUB_DRAFT_OVERLAY_URL}?v=${Date.now()}`, { cache: "no-store" });
         if (!response.ok) return { ok: false, error: `HTTP ${response.status}` };
         const players = overlayPlayersFromDocument(await response.json(), mode);
-        return players.length ? { ok: true, players } : { ok: false, error: "no players in the published feed" };
+        return players.length ? { ok: true, players, targetsError } : { ok: false, error: "no players in the published feed" };
       }, "load")
     });
     banner("NFBC: draft rankings ready");
