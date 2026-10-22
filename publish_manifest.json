@@ -3,23 +3,23 @@
     ".gitattributes": "8b9c3028d6467ff3be7c793141927841d70f47f52d0590677438f488ca154992",
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
-    "bookmarklet.js": "46194a8ae01d4cbbc105cd2d7130ec6626c61d7e2cf2e40fdb45c796a311fc4f",
+    "bookmarklet.js": "44ac74fc2770922b7abaada0e11b12abdd853364daea0fdc8c23fd72e6b959cc",
     "draft2027.json": "b6bb34264753cb60b3bc95af7a3d1a51f4ff56abac35159e03a6dd3da4dd2e6d",
     "draft_overlay.json": "9e80d5fbd7579fd9df70bb02eca93f86dfcef7dff4ef975b04fcda8d9ebb9c5b",
-    "faab.json": "16a80ef27bb30b067244b5e9d1bc2030c278b1bd5a63b4de0c0cc4767945d047",
-    "l30.json": "9d35853f121dd3ad0e9fbed1e6d8aa9a69ec53392265ba0ceb9e66cb845a48d1",
-    "projections.json": "73d82229d55c50b197cf743c893e6b387be2eba218827b14335c139a16de1b6b",
-    "projections_next.json": "00bfc1519e45fb723a1b8a25f716d2605f50c15fe0aa7acfa817cba9ee81109d",
+    "faab.json": "ec7281b4a4178a1a43c9ab0cbe2907f2022cc42278930ee6491c4f644f6c2ab7",
+    "l30.json": "0789bf289f04bb3adca289fb7aba7c48c173b07e18eecc8a9c7db3dc1730e239",
+    "projections.json": "4a7cd1c6e6c462c073b1514d3ba09e0eeb35c112addec53216aa393fb4f96492",
+    "projections_next.json": "684368f87804cb09c67a77d02e5b62414ac08ae66030da703e7ca36c2d5be7bc",
     "prospect_movement.json": "5077fcae1b07c3743035a8902f022fe2bb54cc71a05e2ee31ec3abd91b3b53a9",
     "prospects.json": "8a803cd0124c80f4b83a94fafab02d53445571a8a2d5af3694e627a7019daf11",
     "README.md": "2c3a2e79a81ab5ad3f62fc1984ab66273a3c406ebf4ab746d59adb4733607ed9",
-    "skills.json": "03e3ed4d25459090660ffb3b4531eb0c09523c12045887d4067bfb28f8db05ee"
+    "skills.json": "1053e0e894f6d4fb04c71bc69c01c1a468eacaeb9b8ddedf99c9d6809e254714"
   },
-  "generated_at": "2026-10-21 21:01:37.383817+00:00",
+  "generated_at": "2026-10-22 00:01:42.492672+00:00",
   "client": {
     "source_head": "0a4adc9ff0c6dc80d5ecda1cdfa89519cc6c321b",
     "working_tree_changes": false,
-    "sha256": "46194a8ae01d4cbbc105cd2d7130ec6626c61d7e2cf2e40fdb45c796a311fc4f"
+    "sha256": "44ac74fc2770922b7abaada0e11b12abdd853364daea0fdc8c23fd72e6b959cc"
   },
-  "published_at": "2026-10-21T23:53:37.110147+00:00"
+  "published_at": "2026-10-22T00:08:00.896682+00:00"
 }
