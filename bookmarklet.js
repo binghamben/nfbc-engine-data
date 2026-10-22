@@ -13121,10 +13121,14 @@ This is the complete serialized save diff. Continue and reload the page?`
     }
   }
   __name(fetchPool, "fetchPool");
+  function draftableOverlayPlayers(players) {
+    return players.filter((p) => nameKey(p.n || p.k) !== "hiroto saiki");
+  }
+  __name(draftableOverlayPlayers, "draftableOverlayPlayers");
   function overlayPlayersFromDocument(doc, mode) {
     const boards = doc ?? {};
     const list = boards[mode] ?? boards.DC ?? [];
-    return Array.isArray(list) ? list : [];
+    return Array.isArray(list) ? draftableOverlayPlayers(list) : [];
   }
   __name(overlayPlayersFromDocument, "overlayPlayersFromDocument");
   function enableAvailablePlayerScrolling(root = document) {
@@ -13144,7 +13148,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       showBanner(`Rank overlay unavailable: ${resp.error ?? "no data"}`);
       return;
     }
-    let players = resp.players;
+    let players = draftableOverlayPlayers(resp.players);
     let index = buildIndex(players);
     const targets = { ready: resp.targetsReady, error: resp.targetsError, poolReady: false };
     let ranks = remainingRanks(players, null);
@@ -13171,7 +13175,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       try {
         const next = await load();
         if (next.ok && next.players) {
-          players = next.players;
+          players = draftableOverlayPlayers(next.players);
           index = buildIndex(players);
           targets.ready = next.targetsReady;
           targets.error = next.targetsError;
