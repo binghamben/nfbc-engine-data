@@ -12723,7 +12723,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const slot = (select?.selectedOptions[0]?.textContent ?? select?.value ?? "").replace(/^string:/, "").trim();
     if (!name) return;
     const player = pickPlayer(index, name, "", slot);
-    const stamp = `${name}|${slot}|${player?.pos ?? ""}`;
+    const stamp = `${name}|${slot}|${player?.pos ?? ""}|elig2027`;
     if (row.dataset.nfbcOv === stamp) return;
     row.dataset.nfbcOv = stamp;
     row.querySelectorAll(".nfbc-ov, .nfbc-ov-pos, .nfbc-ov-flag").forEach((e) => e.remove());
@@ -12733,11 +12733,12 @@ This is the complete serialized save diff. Continue and reload the page?`
     const b = badge2(player, null, false);
     b.classList.add("nfbc-ov-inline");
     if (player.sgp != null) host.appendChild(b);
-    if (player.s === "P" && player.pos) {
+    if (player.pos) {
       const role = document.createElement("span");
       role.className = "nfbc-ov-pos";
       role.textContent = player.pos.replace(/,/g, "/");
-      role.title = "2027 projected pitcher role";
+      role.prepend("2027: ");
+      role.title = player.s === "P" ? "2027 projected pitcher role" : "2027 position eligibility";
       host.appendChild(role);
     }
     if (slot && !slotEligible(slot, player.pos)) {
