@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT c3089fd9de1e50502ac47ffaf89be374fd004e7f
+// NFBC_SOURCE_COMMIT a63fce6a7281580312fc8c5ddf089da373c5814c
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12507,10 +12507,12 @@ This is the complete serialized save diff. Continue and reload the page?`
     .nfbc-ov.nfbc-ov-a em{min-width:42px}
     .nfbc-ov.nfbc-ov-a .nfbc-empty{visibility:hidden}
     .nfbc-ov-pos{display:inline-block;box-sizing:border-box;margin-left:5px;font:700 11px/1.25 system-ui,sans-serif;color:#713f12;background:#fef3c7;border:1px solid #d6a24b;border-radius:4px;padding:2px 5px;white-space:nowrap;vertical-align:middle}
-    #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;box-sizing:border-box;padding:7px 8px 6px;display:flex;flex-direction:column;justify-content:center;gap:3px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff;border-top:1px solid #e5e7eb}
-    #nfbc-best .nfbc-row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;white-space:nowrap}
-    #nfbc-best .lbl{position:sticky;left:0;z-index:2;flex:0 0 80px;color:#4b5563;background:#fff;font-size:10px;font-weight:750;letter-spacing:.035em;text-transform:uppercase}
-    #nfbc-best .nfbc-row{flex-shrink:0;min-height:22px}
+    .selected-player-pannel.nfbc-board-visible{height:auto !important;min-height:0 !important;overflow:visible !important}
+    #nfbc-best{position:relative;box-sizing:border-box;width:100%;padding:5px 8px 6px;display:flex;flex-direction:column;gap:4px;font:600 11px/1.2 system-ui,sans-serif;background:#fff;border-top:1px solid #e5e7eb}
+    #nfbc-best .nfbc-row{display:flex;align-items:center;gap:5px;min-width:0;flex-shrink:0}
+    #nfbc-best .nfbc-rail{display:flex;align-items:center;gap:5px;flex:1 1 0;min-width:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;white-space:nowrap;padding-bottom:2px;overscroll-behavior-x:contain}
+    #nfbc-best .nfbc-rail:focus-visible{outline:2px solid #1a6fb3;outline-offset:-2px}
+    #nfbc-best .lbl{flex:0 0 74px;color:#4b5563;background:#fff;font-size:10px;font-weight:750;letter-spacing:.035em;text-transform:uppercase}
     #nfbc-best .target-status{color:#64748b;font-size:10px}
     #nfbc-best .target-connect{color:#1d4ed8;border:0;background:none;cursor:pointer;font:inherit;padding:0}
     #nfbc-best .lbl small{display:block;margin-top:2px;color:#7b8798;font-size:8px;font-weight:650;line-height:1.1;letter-spacing:0;text-transform:none;white-space:normal}
@@ -12528,9 +12530,10 @@ This is the complete serialized save diff. Continue and reload the page?`
     #nfbc-best .market{color:#1e3a8a;background:#e0e9ff;border-radius:3px;padding:1px 4px;font-size:9px;font-weight:750}
     #nfbc-best .more{display:inline-flex;align-items:center;min-height:22px;border:1px solid #aab4c2;border-radius:5px;padding:2px 7px;background:#fff;color:#334155;font:750 9px/1 system-ui,sans-serif;cursor:pointer;flex:0 0 auto}
     #nfbc-best .more:hover{background:#eef4fb;border-color:#6b8db8}
-    #nfbc-best .legend{position:absolute;right:10px;top:-22px;color:#4b5563;font-size:9px;font-weight:650;letter-spacing:.015em;pointer-events:none}
     #nfbc-best .chip b{color:#fff;border-radius:3px;padding:1px 4px;font-weight:700}
     #nfbc-best .chip i{font-style:normal;border-radius:3px;padding:1px 4px}
+    #nfbc-best .chip .player-name{max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    #nfbc-best .chip>*{flex-shrink:0}
     #nfbc-best .chip .ps{color:#777;font-weight:600}
     .nfbc-ov-banner{position:fixed;right:10px;bottom:10px;z-index:99999;background:#1f2937;color:#fff;font:13px system-ui;padding:8px 12px;border-radius:6px}
     #playersList .table-scrollable-body tbody{overflow-y:scroll !important;overscroll-behavior-y:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch;scrollbar-gutter:stable}
@@ -12930,7 +12933,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     const selected = panel.querySelector(".player-container");
     const boardVisible = !(selected && !selected.classList.contains("ng-hide"));
     strip.style.display = boardVisible ? "flex" : "none";
-    if (boardVisible) panel.style.minHeight = "124px";
+    panel.classList.toggle("nfbc-board-visible", boardVisible);
     setPanelHeading(panel, boardVisible);
     const avail = players.filter((p) => ranks.has(`avail:${rowKey(p)}`));
     const best = avail.filter((p) => ranks.has(rowKey(p))).slice().sort((a, b) => ranks.get(rowKey(a)) - ranks.get(rowKey(b))).slice(0, BEST_N);
@@ -12949,11 +12952,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     if (strip.dataset.stamp === stamp) return;
     strip.dataset.stamp = stamp;
     strip.textContent = "";
-    const legend = document.createElement("span");
-    legend.className = "legend";
-    legend.textContent = "MODEL \xB7 rank \xB7 VOR \xB7 ADP (n sample)";
-    legend.title = "Rank is among remaining players. Value is VOR. ADP is live NFBC Draft Champions ADP. n is the usable per-player draft sample.";
-    strip.appendChild(legend);
+    strip.title = "MODEL \xB7 rank among remaining players \xB7 VOR \xB7 ADP (n usable player observations)";
     const addRow = /* @__PURE__ */ __name((label, subtitle, list, chip) => {
       const row = document.createElement("div");
       row.className = "nfbc-row";
@@ -12964,6 +12963,12 @@ This is the complete serialized save diff. Continue and reload the page?`
       sub.textContent = subtitle;
       l.appendChild(sub);
       row.appendChild(l);
+      const rail = document.createElement("div");
+      rail.className = "nfbc-rail";
+      rail.tabIndex = 0;
+      rail.setAttribute("role", "region");
+      rail.setAttribute("aria-label", `${label}: scroll for more players`);
+      row.appendChild(rail);
       const shown = expanded ? list : list.slice(0, BEST_VISIBLE_N);
       for (const p of shown) {
         const c = document.createElement("span");
@@ -12989,11 +12994,12 @@ This is the complete serialized save diff. Continue and reload the page?`
         if (gap != null) {
           const edge = document.createElement("span");
           edge.className = "edge";
-          edge.textContent = `ADP gap +${gap}`;
+          edge.textContent = `\u0394+${gap}`;
+          edge.title = `ADP gap +${gap}: engine board ranks this player ${gap} picks earlier than ADP`;
           c.appendChild(edge);
         }
         c.addEventListener("click", () => findPlayer(p.n ?? ""));
-        row.appendChild(c);
+        rail.appendChild(c);
       }
       if (list.length > BEST_VISIBLE_N) {
         const more = document.createElement("button");
@@ -13006,13 +13012,15 @@ This is the complete serialized save diff. Continue and reload the page?`
           delete strip.dataset.stamp;
           renderBestAvailable(players, ranks, targets);
         });
-        row.appendChild(more);
+        rail.appendChild(more);
       }
       strip.appendChild(row);
     }, "addRow");
     const nameSpan = /* @__PURE__ */ __name((p) => {
       const n2 = document.createElement("span");
+      n2.className = "player-name";
       n2.textContent = p.n ?? "";
+      n2.title = p.n ?? "";
       return n2;
     }, "nameSpan");
     const posSpan = /* @__PURE__ */ __name((p) => {
@@ -13093,7 +13101,7 @@ This is the complete serialized save diff. Continue and reload the page?`
         status.type = "button";
         status.addEventListener("click", () => targets.connect?.());
       }
-      row.appendChild(status);
+      row.querySelector(".nfbc-rail").appendChild(status);
     }
   }
   __name(renderBestAvailable, "renderBestAvailable");
