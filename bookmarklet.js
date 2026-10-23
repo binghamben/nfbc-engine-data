@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT 189b4244645738351922362c3f8e888f0230f43b
+// NFBC_SOURCE_COMMIT a9df5353fb66d05753550bf3b4234f9c84d350a6
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12506,7 +12506,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     .nfbc-ov.nfbc-ov-a i.nfbc-c-adp{min-width:64px}
     .nfbc-ov.nfbc-ov-a em{min-width:42px}
     .nfbc-ov.nfbc-ov-a .nfbc-empty{visibility:hidden}
-    .nfbc-ov-pos{margin-left:5px;font:600 10px/1 system-ui,sans-serif;color:#b35a00;background:#fff3e0;border-radius:3px;padding:2px 4px;white-space:nowrap;vertical-align:middle}
+    .nfbc-ov-pos{display:inline-block;box-sizing:border-box;margin-left:5px;font:700 11px/1.25 system-ui,sans-serif;color:#713f12;background:#fef3c7;border:1px solid #d6a24b;border-radius:4px;padding:2px 5px;white-space:nowrap;vertical-align:middle}
     #nfbc-best{position:absolute;left:0;right:0;top:26px;bottom:0;box-sizing:border-box;padding:7px 8px 6px;display:flex;flex-direction:column;justify-content:center;gap:3px;overflow:hidden;font:600 11px/1.2 system-ui,sans-serif;background:#fff;border-top:1px solid #e5e7eb}
     #nfbc-best .nfbc-row{display:flex;align-items:center;gap:5px;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;white-space:nowrap}
     #nfbc-best .lbl{position:sticky;left:0;z-index:2;flex:0 0 80px;color:#4b5563;background:#fff;font-size:10px;font-weight:750;letter-spacing:.035em;text-transform:uppercase}
