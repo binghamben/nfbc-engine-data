@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT a63fce6a7281580312fc8c5ddf089da373c5814c
+// NFBC_SOURCE_COMMIT ca2179cc2d1291f06e5c3cd0d87e25af46f262e1
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12594,7 +12594,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       const adp = document.createElement("i");
       adp.className = "nfbc-c-adp";
       adp.dataset.confidence = adpConfidence(p.adpn);
-      adp.textContent = `ADP ${p.adp.toFixed(1)}${p.adpn != null ? ` (n${p.adpn})` : ""}`;
+      adp.textContent = `ADP ${p.adp.toFixed(1)}`;
       const source = p.adps === "50" ? "12-team 50s ADP" : p.adps === "DC shadow" ? "15-team DC shadow ADP" : "15-team DC ADP";
       const shadowNote = p.adps === "DC shadow" ? ` \xB7 50s sample ${p.adp50n ?? 0}/3` : "";
       adp.title = `${source} \xB7 ${p.adpn ?? 0} usable draft${p.adpn === 1 ? "" : "s"}${shadowNote} \xB7 ${adpConfidence(p.adpn)} confidence`;
@@ -12952,7 +12952,7 @@ This is the complete serialized save diff. Continue and reload the page?`
     if (strip.dataset.stamp === stamp) return;
     strip.dataset.stamp = stamp;
     strip.textContent = "";
-    strip.title = "MODEL \xB7 rank among remaining players \xB7 VOR \xB7 ADP (n usable player observations)";
+    strip.title = "MODEL \xB7 rank among remaining players \xB7 VOR \xB7 ADP";
     const addRow = /* @__PURE__ */ __name((label, subtitle, list, chip) => {
       const row = document.createElement("div");
       row.className = "nfbc-row";
@@ -13061,12 +13061,7 @@ This is the complete serialized save diff. Continue and reload the page?`
         a.textContent = `DC* ${a.textContent}`;
         a.title = `DC shadow because this player's usable 50s sample is ${p.adp50n ?? 0}/3`;
       }
-      const sample = document.createElement("span");
-      sample.className = "sample";
-      sample.dataset.confidence = adpConfidence(p.adpn);
-      sample.textContent = `n=${p.adpn ?? 0}`;
-      sample.title = `${p.adpn ?? 0} usable player-level draft observations \xB7 ${adpConfidence(p.adpn)} confidence`;
-      c.append(a, nameSpan(p), posSpan(p), sample);
+      c.append(a, nameSpan(p), posSpan(p));
       const remaining = ranks.get(rowKey(p));
       if (remaining != null) {
         const modelRank = document.createElement("span");
