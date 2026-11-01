@@ -5,21 +5,21 @@
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
     "bookmarklet.js": "353ad84bc070b201a9484f1c20279181157ea68cc0d3351fd085487971ba5d29",
     "draft2027.json": "c5e6a3f8fbcb4464e291f7e4a6d55d80b2df75b92b5e9366aad5a14b7776c163",
-    "draft_overlay.json": "54dbc1e559a11435ab5c0e8b55315e1050fc2b91d11fd5666786d954353efbb7",
-    "faab.json": "2aaa9829b2f7c419efaecb4e1fbc789c0209b3874fbac48b8e257262f159566e",
-    "l30.json": "cdc8c02796a3a6229788af1e94699333a5c794476a48bf863771c9e9fcbbd9ae",
-    "projections.json": "472d25fd050441f5b81085175368a9b433c2b55c9f930f0649bc5e78b13596f9",
-    "projections_next.json": "dd94684886f8fb1f29999c020470aac650fc52f30179fa0128d5bcfc3f059b9f",
+    "draft_overlay.json": "ce0cd4f7f3d53c312e7a9ee6919a697b2bc89cfda537386ec2b53e0274d1d3f3",
+    "faab.json": "90509c76f72bd0547fe229f3db9e23dfc5e95c81bf91f5226f8ffd666c8cedff",
+    "l30.json": "c27b373c300028d25c20355cb5202226679e0cbd3fd7d89964e51caea556a9eb",
+    "projections.json": "b1fa135fbc54f76b037d20b360b6fc75e67b376890712b3c2a8c34bde7070a8d",
+    "projections_next.json": "2e70384309743f90617daae9fb4e32dc53701921376e3d73b583c788da9329cd",
     "prospect_movement.json": "5accb223cef998dbf41ad1f676a381e9d751e296cf6716cc7fccfde6ce63e8b8",
     "prospects.json": "3dd5313d2633ab84f5dcba1c1c7b864be38706fa2b70bbeca989cf6b52f87465",
     "README.md": "2c3a2e79a81ab5ad3f62fc1984ab66273a3c406ebf4ab746d59adb4733607ed9",
-    "skills.json": "365a18750e4ee919fe2ca274cbc1c641b77d440d9fd1b888d10ad6501c4d5ed9"
+    "skills.json": "02932ddfe07aea32036c173f7dd9a531ada89566b8c3f403659ac8e6a6fa2f75"
   },
-  "generated_at": "2026-11-01 20:01:37.943333+00:00",
+  "generated_at": "2026-11-01 21:01:56.848877+00:00",
   "client": {
     "source_head": "ca2179cc2d1291f06e5c3cd0d87e25af46f262e1",
     "working_tree_changes": false,
     "sha256": "353ad84bc070b201a9484f1c20279181157ea68cc0d3351fd085487971ba5d29"
   },
-  "published_at": "2026-11-01T20:53:48.300535+00:00"
+  "published_at": "2026-11-01T21:08:45.669170+00:00"
 }
