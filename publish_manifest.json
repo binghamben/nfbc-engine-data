@@ -4,22 +4,22 @@
     ".nojekyll": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "bookmarklet-loader.txt": "ae592c75281825d3ce6cfc4ed2a8d88a3aeca467749b626c7cf24d38060792bf",
     "bookmarklet.js": "353ad84bc070b201a9484f1c20279181157ea68cc0d3351fd085487971ba5d29",
-    "draft2027.json": "a3273433041f910cb95037806757f3306d17b03bb01244ff9fa7607324a3f720",
-    "draft_overlay.json": "8ba5b2cd80c76e521a667a76feb6d17d6cb10fd5f0ebe84177c9d35e023e4df8",
-    "faab.json": "c069c60dfa952843520f484952b51dac893c2ab55fa08967a50ea71c818472c9",
-    "l30.json": "f77dbb52dda1f06a2ca1bae636ffeb9a01a7d933d721bd6aba2185f9bcd72d40",
-    "projections.json": "d554e6f60e9d307241f7540872489223b5d04ee56fe9ca7d666f85a1b4e5e598",
-    "projections_next.json": "9dc92d62049e29437813ba3f04234cd048cbe0712f946a28908d55c3130cb7e1",
-    "prospect_movement.json": "55ec7a256bf0c697c6e919732dc4e072759d9279a385f3f484b4b7b0c7aa84d4",
-    "prospects.json": "3885e2955c3174be4036c40b6c2d3114449cd70abda8cf1a2707454d0442f7e7",
+    "draft2027.json": "60bbd80cf4fd1186c78deeb836f9eb7952eb08bb8d72a3de0c165eaf683aaa39",
+    "draft_overlay.json": "d775a311ec3349c41c7760e4d51147bc360832530f068283aff9f3f635518ce6",
+    "faab.json": "49f47bd21895e9637f8ef27d01301800585c562682a527bbfda342f714622a11",
+    "l30.json": "bf6ff40b0699415d82a460edfdde4c046c710a4c8f4354f5adecc1114591f408",
+    "projections.json": "ff20c4c18489b1ce2c8a2efa2f08ea41973419542643a735ce9a7739a149348b",
+    "projections_next.json": "a7f8cfe230bfa3660e5ba86cfff671b3b359ea2f52b38620b8f57fe80db8e3a0",
+    "prospect_movement.json": "c223b6f7f551f05bb85e50c8f710f322fca66a0e8cf557dfc1ef926d4b5762ab",
+    "prospects.json": "d1967d73f4da10524d05d6ef2844166f93132cec7ae5fe7dfb99474a2308341a",
     "README.md": "2c3a2e79a81ab5ad3f62fc1984ab66273a3c406ebf4ab746d59adb4733607ed9",
-    "skills.json": "4c8297f7c3c74e420c42dde6528667086ecd06bcd02a242e4b16241d00625182"
+    "skills.json": "9e75b7ec2e2facd8404fac2a497a9a6d564e4e45b4e05c2df45d1cc04418cb9c"
   },
-  "generated_at": "2026-11-03 00:01:56.266919+00:00",
+  "generated_at": "2026-11-04 00:02:04.807948+00:00",
   "client": {
     "source_head": "e76b8a2ebfb18f1d10523b725f89a6c4dd7d5cdf",
     "working_tree_changes": false,
     "sha256": "353ad84bc070b201a9484f1c20279181157ea68cc0d3351fd085487971ba5d29"
   },
-  "published_at": "2026-11-03T02:08:37.850749+00:00"
+  "published_at": "2026-11-04T00:53:52.146085+00:00"
 }
