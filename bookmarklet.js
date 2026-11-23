@@ -1,4 +1,4 @@
-// NFBC_SOURCE_COMMIT ca2179cc2d1291f06e5c3cd0d87e25af46f262e1
+// NFBC_SOURCE_COMMIT 7aecdd97eaf922cbb9fae2efdb4612b1fbefe769
 "use strict";
 (() => {
   var __defProp = Object.defineProperty;
@@ -12396,6 +12396,11 @@ This is the complete serialized save diff. Continue and reload the page?`
   var DRAFT_OVERLAY_FETCH = "nfbc.draftOverlayFetch";
   var DRAFT_OVERLAY_SETTINGS_KEY = "nfbcDraftOverlaySettings";
   var POOL_REFRESH_MS = 5e3;
+  var LOW_CONFIDENCE_NOTE = "LOW CONFIDENCE: engine fallback line, not a modeled projection (no or almost no 2026 starts). The rank and value are a rough guess.";
+  function lowConfidenceNote(p) {
+    return p.lc === 1 ? LOW_CONFIDENCE_NOTE : null;
+  }
+  __name(lowConfidenceNote, "lowConfidenceNote");
   var poolTeam = /* @__PURE__ */ __name((t) => (t ?? "").toUpperCase().replace(/^WSH$|^WSN$/, "WAS").replace(/^CHW$/, "CWS"), "poolTeam");
   function isAvailable(p, byName) {
     let entries = byName.get(p.k);
@@ -12498,6 +12503,10 @@ This is the complete serialized save diff. Continue and reload the page?`
     .nfbc-ov i.nfbc-c-adp[data-confidence="low"]{border-style:dashed;color:#64748b;background:#f1f5f9}
     .nfbc-ov i.nfbc-c-adp[data-confidence="medium"]{border-color:#93a8d8}
     .nfbc-ov[data-market="value"] b{box-shadow:0 0 0 2px #f59e0b}
+    .nfbc-ov i.nfbc-c-lc{color:#92400e;background:#fef3c7;border:1px dashed #92400e;font-weight:800}
+    .nfbc-ov[data-lc="1"] b,.nfbc-ov[data-lc="1"] i.nfbc-c-vor{opacity:.55;border-style:dashed}
+    #nfbc-best .lc{color:#92400e;background:#fef3c7;border:1px dashed #92400e;border-radius:3px;padding:0 3px;font-size:9px;font-weight:800}
+    #nfbc-best .chip[data-lc="1"]{border-style:dashed;opacity:.8}
     .nfbc-ov u{text-decoration:none;color:#8a3b00;background:#ffe9d5;border:1px solid #f5b98a;border-radius:4px;padding:2px 4px}
     .nfbc-ov em{font-style:normal;color:#0b5d2b;background:#dcfce7;border:1px solid #86efac;border-radius:4px;padding:2px 4px}
     .nfbc-ov.nfbc-ov-a b,.nfbc-ov.nfbc-ov-a i,.nfbc-ov.nfbc-ov-a em{display:inline-block;box-sizing:border-box;text-align:center;min-width:0}
@@ -12590,6 +12599,15 @@ This is the complete serialized save diff. Continue and reload the page?`
       sgp.style.background = tone.bg;
       el.appendChild(sgp);
     } else if (aligned) hole("i", "nfbc-c-vor");
+    const lowNote = lowConfidenceNote(p);
+    if (lowNote) {
+      el.dataset.lc = "1";
+      const lc = document.createElement("i");
+      lc.className = "nfbc-c-lc";
+      lc.textContent = "LOW";
+      lc.title = lowNote;
+      el.appendChild(lc);
+    }
     if (showRank && includeAdp && p.adp != null) {
       const adp = document.createElement("i");
       adp.className = "nfbc-c-adp";
@@ -12623,6 +12641,7 @@ This is the complete serialized save diff. Continue and reload the page?`
       const source = p.adps === "50" ? "12-team 50s" : p.adps === "DC shadow" ? "15-team DC shadow" : "15-team DC";
       lines.push(`${source} ADP ${p.adp.toFixed(1)} across ${p.adpn ?? "?"} usable drafts${p.adps === "DC shadow" ? ` (50s sample ${p.adp50n ?? 0}/3)` : ""}`);
     }
+    if (lowNote) lines.unshift(lowNote);
     if (p.pti) {
       lines.push(`PTI: played through a ${p.pti.toLowerCase()} injury in 2026; such hitters average about -.045 OPS vs projection the next year. Already reflected in this projection.`);
     }
@@ -12984,6 +13003,16 @@ This is the complete serialized save diff. Continue and reload the page?`
           c.title += ` \xB7 engine board ${gap} picks earlier than ADP`;
         }
         chip(p, c);
+        const lowChipNote = lowConfidenceNote(p);
+        if (lowChipNote) {
+          c.dataset.lc = "1";
+          c.title += ` \xB7 ${lowChipNote}`;
+          const lc = document.createElement("span");
+          lc.className = "lc";
+          lc.textContent = "LOW";
+          lc.title = lowChipNote;
+          c.appendChild(lc);
+        }
         const need = needLabel(p, openSlots);
         if (need) {
           const marker = document.createElement("span");
