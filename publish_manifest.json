@@ -9,16 +9,16 @@
     "l30.json": "05618a4962fda9056c0c4a05549ca0ff645e6f1e576217d1cf8a1023def99b62",
     "projections.json": "1e6a2f2fa377b0ba9e001092a68706c99f01048e0bbd8478a2fc20d70740d206",
     "projections_next.json": "29293ed05888596c6528211b22e258d2caeb8bf657a84ca1754651d679094c07",
-    "prospect_movement.json": "d4182aeab5f3163a044c35f39f340ba9288f65f37600008ed1c323d451b63710",
-    "prospects.json": "359e62595714d15bd37b176ef6b2a4e3321819c43924b7cbb29ad075bc4a0d32",
+    "prospect_movement.json": "b3748b25a98d94240e8801680873709d21dce3d8566a8a8db3aa21f3aaf0bfe2",
+    "prospects.json": "1bb4605b0ddfb5bb4dd4757cf4c6e3cd750b4d8efa8a738f095d4dd961434a9e",
     "README.md": "13d64f5b6df067c851e8fafe4c60773ad06f04c81b4f76c821a9dcc4df6188f5",
     "skills.json": "c6aa1f9a641b02ddf4c7eef09be8a3fea8cda8cae64aa9afee9cde9b605716e7"
   },
   "generated_at": "2026-11-13 20:01:32.918965+00:00",
   "client": {
-    "source_head": "c03938aa7fc67bef0ee9d62a0c0f69aaf6a3eb20",
+    "source_head": "79b0c0666bc48ec22557d98e59cd370243478181",
     "working_tree_changes": false,
     "sha256": "df66a69ea83dc97736c680e81d34a97736db3a9a489f18658cfe513a77a1189c"
   },
-  "published_at": "2026-11-25T00:01:44.232928+00:00"
+  "published_at": "2026-11-25T11:54:50.730860+00:00"
 }
