@@ -16,9 +16,9 @@
   },
   "generated_at": "2026-11-13 20:01:32.918965+00:00",
   "client": {
-    "source_head": "50b8f94b39e409184fc2c24477b006b06f35881b",
+    "source_head": "c03938aa7fc67bef0ee9d62a0c0f69aaf6a3eb20",
     "working_tree_changes": false,
     "sha256": "df66a69ea83dc97736c680e81d34a97736db3a9a489f18658cfe513a77a1189c"
   },
-  "published_at": "2026-11-24T19:01:39.188850+00:00"
+  "published_at": "2026-11-25T00:01:44.232928+00:00"
 }
